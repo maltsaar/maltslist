@@ -2,26 +2,11 @@
 
 require_once "./config.php";
 
-try {
-	$db = new SQLite3("./db/" . $database, SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
-	
-	$result = $db->query("SELECT * from 'list'");
-	$dataArray = [];
-	while ($row = $result->fetchArray(1))
-	{
-		array_push($dataArray, $row);
-	}
-} catch (Exception $e) {
-    $errorType = "db";
-}
-
-
-foreach ($_POST as $key => $value) {
-    echo "Field ".htmlspecialchars($key)." is ".htmlspecialchars($value)."<br>";
-}
-
 // variables
+$timestamp = date("Y-m-d H:i:s");
+$dataArray = [];
 
+// post variables
 $entry = $_POST['entry'];
 
 $formScoreChange = $_POST['form-score-change'];
@@ -31,10 +16,30 @@ $formRewatchAdd = $_POST['form-rewatch-add'];
 $formIsCheckmark = $_POST['form-isCheckmark'];
 $formFavoriteBool = $_POST['form-favorite-bool'];
 
-$timestamp = date("Y-m-d H:i:s");
+// check if db exists
+if (file_exists("./db/$database")) {
+    $db = new SQLite3("./db/" . $database, SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
+	$db->enableExceptions(true);
+	
+	// get current data
+	try {
+		$result = $db->query("SELECT * from 'list'");
+		
+		while ($row = $result->fetchArray(1))
+		{
+			array_push($dataArray, $row);
+		}
+	} catch (Exception $e) {
+		header("location:https://list.wavy.ws?error_title=db putsis!&error_msg=$e");
+	}
+} else {
+	header("location:https://list.wavy.ws?error_title=db putsis!&error_msg=File doesn't exist. Please run setupDatabase.php");
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	if (isset($entry)) {
+		$currentEntryTitle = $dataArray[$entry-1][title];
+		
 		// check form-score-change
 		if (isset($formScoreChange)) {
 			$formScoreChangeNrArray = explode('-',$formScoreChange);
@@ -42,17 +47,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			
 			$statement = "UPDATE list SET score=$formScoreChangeResult WHERE `index`=$entry";
 			try {
-				$db = new SQLite3("./db/" . $database, SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
-				$db->enableExceptions(true);
 				$db->exec($statement);
 				$db->exec("DELETE FROM 'last-updated'");
 				$db->exec("INSERT INTO 'last-updated' (timestamp) VALUES ('$timestamp')");
 				$db->close();
 			} catch (Exception $e) {
-				echo $e;
+				header("location:https://list.wavy.ws?error_title=Failed to update entry!&error_msg=Couldn't update $currentEntryTitle. Exception - $e!");
 			}
-			
-			echo "DB Updated! Statement: $statement";
+			header("location:https://list.wavy.ws?regular_title=Entry updated!&regular_msg=$currentEntryTitle has been updated!");
 		}
 		
 		// check form-progress-subtract
@@ -61,23 +63,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$allowedMaximumProgress = $dataArray[$entry-1][progress_length];
 			$currentProgress = $dataArray[$entry-1][progress];
 			if ($currentProgress-$formProgressSubtract<0) {
-				echo "Nigga: How can you minus 1 a 1 from a 0 what is you doing smhsmh";
+				header("location:https://list.wavy.ws?error_title=Can't go below 0 in progress&error_msg=Really?&error_img=https://auk.wavy.ws/i/bdbse.png");
 			} else {
 				$formProgressSubtractResult = $currentProgress-$formProgressSubtract;
 				$statement = "UPDATE list SET progress=$formProgressSubtractResult WHERE `index`=$entry";
 				try {
-					$db = new SQLite3("./db/" . $database, SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
-					$db->enableExceptions(true);
 					$db->exec($statement);
 					$db->exec("DELETE FROM 'last-updated'");
 					$db->exec("INSERT INTO 'last-updated' (timestamp) VALUES ('$timestamp')");
 					$db->close();
 				} catch (Exception $e) {
-					echo $e;
+					header("location:https://list.wavy.ws?error_title=Failed to change entry!&error_msg=Exception - $e!");
 				}
-				
-				echo "DB Updated! Statement: $statement";
-				}
+				header("location:https://list.wavy.ws?regular_title=Entry updated!&regular_msg=$currentEntryTitle has been updated!");
+			}
 		}
 		
 		// check form-progress-add
@@ -87,26 +86,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$currentProgress = $dataArray[$entry-1][progress];
 			
 			if ($currentProgress+$formProgressAdd>$allowedMaximumProgress) {
-				echo "Nigga: How can you add a 1 to something that is already full smhsmh";
+				header("location:https://list.wavy.ws?error_title=Failed to change entry!&error_title=Can't go past the limit specified in progress_length&error_msg=Really?&error_img=https://auk.wavy.ws/i/bdbse.png");
 			} else {
 				
 				$formProgressAddResult = $currentProgress+$formProgressAdd;
 				$statement = "UPDATE list SET progress=$formProgressAddResult WHERE `index`=$entry";
 				try {
-					$db = new SQLite3("./db/" . $database, SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
-					$db->enableExceptions(true);
 					$db->exec($statement);
 					$db->exec("DELETE FROM 'last-updated'");
 					$db->exec("INSERT INTO 'last-updated' (timestamp) VALUES ('$timestamp')");
 					$db->close();
 				} catch (Exception $e) {
-					echo $e;
+					header("location:https://list.wavy.ws?error_title=Failed to change entry!&error_msg=Exception - $e!");
 				}
-				
-				echo "DB Updated! Statement: $statement";
-				
+				header("location:https://list.wavy.ws?regular_title=Entry updated!&regular_msg=$currentEntryTitle has been updated!");
 			}
-			
 		}
 		
 		// check form-rewatch-add
@@ -117,17 +111,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			
 			$statement = "UPDATE list SET rewatch=$currentRewatch+1 WHERE `index`=$entry";
 			try {
-				$db = new SQLite3("./db/" . $database, SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
-				$db->enableExceptions(true);
 				$db->exec($statement);
 				$db->exec("DELETE FROM 'last-updated'");
 				$db->exec("INSERT INTO 'last-updated' (timestamp) VALUES ('$timestamp')");
 				$db->close();
 			} catch (Exception $e) {
-				echo $e;
+				header("location:https://list.wavy.ws?error_title=Failed to change entry!&error_msg=Exception - $e!");
 			}
-			
-			echo "DB Updated! Statement: $statement";
+			header("location:https://list.wavy.ws?regular_title=Entry updated!&regular_msg=$currentEntryTitle has been updated!");
 		}
 		
 		// check form-favorite-bool
@@ -136,37 +127,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				
 				$statement = "UPDATE list SET favorite='on' WHERE `index`=$entry";
 				try {
-					$db = new SQLite3("./db/" . $database, SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
-					$db->enableExceptions(true);
 					$db->exec($statement);
 					$db->exec("DELETE FROM 'last-updated'");
 					$db->exec("INSERT INTO 'last-updated' (timestamp) VALUES ('$timestamp')");
 					$db->close();
 				} catch (Exception $e) {
-					echo $e;
+					header("location:https://list.wavy.ws?error_title=Failed to change entry!&error_msg=Exception - $e!");
 				}
-				
-				echo "DB Updated! Statement: $statement";
+				header("location:https://list.wavy.ws?regular_title=Entry updated!&regular_msg=$currentEntryTitle has been updated!");
 			} else {
 			
 				$statement = "UPDATE list SET favorite='off' WHERE `index`=$entry";
 				try {
-					$db = new SQLite3("./db/" . $database, SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
-					$db->enableExceptions(true);
 					$db->exec($statement);
 					$db->exec("DELETE FROM 'last-updated'");
 					$db->exec("INSERT INTO 'last-updated' (timestamp) VALUES ('$timestamp')");
 					$db->close();
 				} catch (Exception $e) {
-					echo $e;
+					header("location:https://list.wavy.ws?error_title=Failed to change entry!&error_msg=Exception - $e!");
 				}
-				
-				echo "DB Updated! Statement: $statement";
-			
+				header("location:https://list.wavy.ws?regular_title=Entry updated!&regular_msg=$currentEntryTitle has been updated!");
 			}
 		}
-
-		header('location: https://list.wavy.ws');
 	} else {
 		header('location: https://list.wavy.ws');
 		exit;
@@ -174,6 +156,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	
 	
 }
-
 
 ?>

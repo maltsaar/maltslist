@@ -25,7 +25,7 @@ $db->query('CREATE TABLE IF NOT EXISTS "list" (
     "rewatch" INTEGER,
     "favorite" VARCHAR,
     "comment" VARCHAR,
-    "status" VARCHAR
+    "is_deleted" VARCHAR
 )');
 $db->query('CREATE TABLE IF NOT EXISTS "last-updated" (
     "timestamp" VARCHAR

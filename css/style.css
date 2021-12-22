@@ -1,0 +1,58 @@
+.marginDown {
+	margin-bottom: 15px;
+}
+
+.marginUp {
+	margin-top: 15px;
+}
+  
+.checkmark {
+	text-align: center;
+}
+  
+.left-button {
+	float: left;
+}
+  
+.right-button {
+	float: right;
+}
+
+.header-container {
+	height: 85px;
+}
+
+.header-thing-1 {
+	float: left;
+	margin-right: 15px;
+	padding: 0;
+	height: 85px;
+}
+
+.header-thing-2 {
+	height: 85px;
+	vertical-align: middle;
+	display: table-cell;
+}
+
+.navbar-start {
+	height: 52px;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.modal-card-plus {
+	width: 700px;
+}
+
+.modal-card-minus {
+	width: 350px;
+}
+
+.modalBanner {
+	padding: 40px;
+}
+
+.message-error-body, .message-regular-body {
+	width: 400px;
+}
