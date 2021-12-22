@@ -8,3 +8,5 @@
 * Make it so you can edit/add comments after adding an entry
 * Add an option to config.php so you can specify FQDN instead of having it hardcoded
 * Write documentation
+* Add more functions (A lot of re-usable code currently that is duplicated)
+* Better error handling
