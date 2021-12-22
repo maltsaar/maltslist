@@ -67,7 +67,8 @@ if (file_exists("./db/$database")) {
 		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 		<meta http-equiv="Pragma" content="no-cache" />
 		<meta http-equiv="Expires" content="0" />
-	
+		
+		<link rel="icon" type="image/png" href="/images/rei.png"/>
 		<title>maltslist</title>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
 		<link rel="stylesheet" href="/css/style.css">
@@ -192,7 +193,7 @@ if (file_exists("./db/$database")) {
 					<div class="container header-container animate__animated animate__fadeInDown">
 						<a class="header-thing-a" href="https://list.wavy.ws">
 							<div class="header-thing-1">
-								<img src="https://auk.wavy.ws/i/0qybl.png" width="85">
+								<img src="/images/rei.png" width="85">
 							</div>
 							<div class="header-thing-2">
 								<span class="title">maltslist</span>
