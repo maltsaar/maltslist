@@ -31,4 +31,4 @@ $db->query('CREATE TABLE IF NOT EXISTS "last-updated" (
     "timestamp" VARCHAR
 )');
 
-echo "Done! ...You can now use the serverlist.\n";
+echo "Done! ...\n";
