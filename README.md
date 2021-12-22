@@ -6,3 +6,4 @@
 * Cleanup/Refactor
 * Add export to csv/xlsx button
 * Make it so you can edit/add comments after adding an entry
+* Write documentation
