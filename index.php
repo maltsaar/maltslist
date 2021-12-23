@@ -1,6 +1,11 @@
 <?php
 
+require_once "./vendor/autoload.php";
 require_once "./config.php";
+
+// configure logger
+Logger::configure("config.php");
+$logger = Logger::getLogger('maltslist index');
 
 // variables
 $dataArray = [];
@@ -26,32 +31,41 @@ if (file_exists("./db/$database")) {
 	$db->enableExceptions(true);
 	
 	// get current data
+	$logger->info("Trying to query database for current list data");
 	try {
 		$result = $db->query("SELECT * from 'list'");
 		while ($row = $result->fetchArray(1))
 		{
 			array_push($dataArray, $row);
 		}
+		$logger->info("Successfully queried database for current list data");
 	} catch (Exception $e) {
-		$error_msg = "$e";
+		$exceptionMessage = $e->getMessage();
+		$logger->FATAL("Unable to query database for current list data due to excetion: $exceptionMessage");
+		$error_msg = "$exceptionMessage";
 		$error_title = "db putsis";
 	}
 	
 	// get timestamp
+	$logger->info("Trying to query database for last timestamp");
 	try {
 		$result = $db->query("SELECT * from 'last-updated'");
 		while ($row = $result->fetchArray(1))
 		{
 			array_push($timestamp, $row);
 		}
+		$logger->info("Successfully queried database for last timestamp");
 	} catch (Exception $e) {
-		$error_msg = "$e";
+		$exceptionMessage = $e->getMessage();
+		$logger->FATAL("Unable to query database for last timestamp due to excetion: $exceptionMessage");
+		$error_msg = "$exceptionMessage";
 		$error_title = "db putsis";
 	}
 	
 	// close
 	$db->close();
 } else {
+	$logger->FATAL("database file doesn't exist");
 	$error_msg = "File doesn't exist. Please run setupDatabase.php";
 	$error_title = "db putsis";
 }

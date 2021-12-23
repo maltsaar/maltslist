@@ -1,1 +1,4 @@
 db/*
+composer.lock
+composer.phar
+vendor

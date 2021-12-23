@@ -1,0 +1,15 @@
+2021-12-23T12:10:47+00:00 INFO  maltslist add-entry add-entry.php POST request received
+2021-12-23T12:10:47+00:00 INFO  maltslist add-entry Trying to query database for current list data
+2021-12-23T12:10:47+00:00 INFO  maltslist add-entry Successfully queried database for current list data
+2021-12-23T12:10:47+00:00 INFO  maltslist add-entry Trying to check for add-entry or remove-entry
+2021-12-23T12:10:47+00:00 INFO  maltslist add-entry Got add-entry
+2021-12-23T12:10:47+00:00 INFO  maltslist add-entry Trying to INSERT new data to database
+2021-12-23T12:10:47+00:00 INFO  maltslist add-entry Successfully added new entry: title - "Peaky Blinders (2013) S01" to database
+2021-12-23T12:10:47+00:00 INFO  maltslist index Trying to query database for current list data
+2021-12-23T12:10:47+00:00 INFO  maltslist index Successfully queried database for current list data
+2021-12-23T12:10:47+00:00 INFO  maltslist index Trying to query database for last timestamp
+2021-12-23T12:10:47+00:00 INFO  maltslist index Successfully queried database for last timestamp
+2021-12-23T12:12:33+00:00 INFO  maltslist index Trying to query database for current list data
+2021-12-23T12:12:33+00:00 INFO  maltslist index Successfully queried database for current list data
+2021-12-23T12:12:33+00:00 INFO  maltslist index Trying to query database for last timestamp
+2021-12-23T12:12:33+00:00 INFO  maltslist index Successfully queried database for last timestamp
