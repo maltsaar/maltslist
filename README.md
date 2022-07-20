@@ -1,5 +1,5 @@
 # maltslist
-A simple way to keep track of movies and tv shows.
+A simple way to keep track of movies and tv shows
 
 <img src="/screenshot.png" width="50%">
 
