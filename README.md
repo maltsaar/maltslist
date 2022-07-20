@@ -1,4 +1,5 @@
 # maltslist
+# DISCLAIMER: Some of the code is questionable. Definitely think twice before opening it up to the web.
 A simple way to keep track of movies and tv shows
 
 <img src="/screenshot.png" width="50%">
