@@ -2,3 +2,4 @@ db/*
 composer.lock
 composer.phar
 vendor
+maltslist.log
