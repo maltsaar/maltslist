@@ -56,3 +56,37 @@
 .message-error-body, .message-regular-body {
 	width: 400px;
 }
+
+.dot {
+  height: 5px;
+  width: 5px;
+  border-radius: 50%;
+}
+
+th {
+  cursor: pointer;
+}
+
+th.unscrollable {
+  cursor: default;
+}
+
+select {
+  height: 24px;
+  position: absolute;
+  border: 0px;
+  border-radius: 0px;
+  box-shadow: 0px;
+}
+
+button {
+  height: 24px;
+  border: 0px;
+  border-color: #000;
+  border-radius: 0px;
+  box-shadow: 0px; 
+}
+
+table {
+  margin-left: 25px;
+}

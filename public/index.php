@@ -1,10 +1,10 @@
 <?php
 
-require_once "./vendor/autoload.php";
-require_once "./config.php";
+require_once "../vendor/autoload.php";
+require_once "../config.php";
 
 // configure logger
-Logger::configure("config.php");
+Logger::configure("../config.php");
 $logger = Logger::getLogger('maltslist index');
 
 // variables
@@ -26,8 +26,8 @@ if (isset($_GET["regular_msg"], $_GET["regular_title"])) {
 }
 
 // check if db exists
-if (file_exists("./db/$database")) {
-    $db = new SQLite3("./db/" . $database, SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
+if (file_exists("../db/$database")) {
+    $db = new SQLite3("../db/" . $database, SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
     $db->enableExceptions(true);
     
     // get current data
@@ -88,9 +88,9 @@ else {
         
         <link rel="icon" type="image/png" href="/images/rei.png"/>
         <title>maltslist</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+        <link rel="stylesheet" href="/css/bulma-0.9.4.min.css">
         <link rel="stylesheet" href="/css/style.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+        <link rel="stylesheet" href="/css/animate-4.1.1.min.css"/>
     </head>
     
     <body>
@@ -188,7 +188,7 @@ else {
                 </section>
                 
                 <section class="modal-card-body">
-                    <form action="/add-entry.php" method="post">
+                    <form action="/remove-entry.php" method="post">
                         <div class="field">
                             <input type="hidden" name="form-which" value="remove-entry"/>
                             <label class="label">Index</label>
@@ -203,15 +203,71 @@ else {
 
             <button class="modal-close is-large" aria-label="close"></button>
         </div>        
+
+        <!-- comment modal -->
+        <div class="modal" id="modal-comment">
+            <div class="modal-background animate__animated animate__fadeIn"></div>
+            <div class="modal-card modal-card-comment animate__animated animate__zoomIn">
+                <section class="modal-card-header">
+                    <div class="modalBanner hero is-warning is-bold">
+                        <h1 class="title">Change comment!</h1>
+                        <h6 class="subtitle is-6">
+                            Note: Type "n/a" if you want to remove a comment from an entry
+                        </h6>
+                    </div>
+                </section>
+                
+                <section class="modal-card-body">
+                    <form action="/change-comment.php" method="post">
+                        <div class="field">
+                            <label class="label">Index</label>
+                            <div class="control">
+                                <input class="input" name="form-index" type="number" min="0" value="0">
+                            </div>
+                            <label class="label">Comment</label>
+                            <div class="control">
+                                <textarea class="textarea" name="form-comment" placeholder="Example: Ending was bad"></textarea>
+                            </div>
+                            <button class="button marginUp" type="submit">Submit</button>
+                        </div>
+                    </form>
+                </section>
+            </div>
+
+            <button class="modal-close is-large" aria-label="close"></button>
+        </div>
+        
+        <!-- csv modal -->
+        <div class="modal" id="modal-csv">
+            <div class="modal-background animate__animated animate__fadeIn"></div>
+            <div class="modal-card modal-card-csv animate__animated animate__zoomIn">
+                <section class="modal-card-header">
+                    <div class="modalBanner hero is-success is-bold">
+                        <h1 class="title">Export as CSV!</h1>
+                        <h6 class="subtitle is-6">
+                            This converts the sqlite database into a csv file.
+                        </h6>
+                    </div>
+                </section>
+                
+                <section class="modal-card-body">
+                    <div class="field">
+                        <a href="/export-xlsx.php"><button class="button">Convert and Download</button></a>
+                    </div>
+                </section>
+            </div>
+
+            <button class="modal-close is-large" aria-label="close"></button>
+        </div>
         
         <header class="marginDown">
             <!-- header -->
             <section class="hero is-info is-bold">
                 <div class="hero-body">
                     <div class="container header-container animate__animated animate__fadeInDown">
-                        <a class="header-thing-a" href="https://list.wavy.ws">
+                        <a class="header-thing-a" href="/index.php">
                             <div class="header-thing-1">
-                                <img src="/images/rei.png" width="85">
+                                <img src="images/rei.png" width="85">
                             </div>
                             <div class="header-thing-2">
                                 <span class="title">maltslist</span>
@@ -226,9 +282,12 @@ else {
                 <div id="navMenuColordark-example" class="navbar-menu">
                     <div class="container container-nav">
                         <div class="navbar-start">
-                            <button data-target="modal-plus" class="modal-button button is-info is-small animate__animated animate__fadeIn">+</button>
-                            <button data-target="modal-minus" class="modal-button button is-info is-small animate__animated animate__fadeIn">-</button>
-                            <!-- TODO: I'll add expert to xlsx/csv later... <button class="button is-info is-small animate__animated animate__fadeIn">Export CSV</button> -->
+                            <button data-target="modal-plus"    class="modal-button button is-info is-small animate__animated animate__fadeIn">+</button>
+                            <button data-target="modal-minus"   class="modal-button button is-danger is-small animate__animated animate__fadeIn">-</button>
+                            <button data-target="modal-comment" class="modal-button button is-warning is-small animate__animated animate__fadeIn">Change comment</button>
+                            <button data-target="modal-csv"     class="modal-button button is-success is-small animate__animated animate__fadeIn">Export CSV</button>
+                            
+                            <?php if ($ssoEnabled === true) { ?><a href="<?= $ssoUrlLogout; ?>"><button class="button is-danger is-small animate__animated animate__fadeIn">Logout</button></a><?php } ?>                            
                         </div>
                     </div>
                 </div>
@@ -272,20 +331,19 @@ else {
 
         <main>
             <div class="container">
-            
-                <!-- Plan-to-watch -->
-                <h3 class="title is-3 animate__animated animate__fadeIn">Plan to watch:</h3>
+                <!-- Plan to watch -->
+                <h3 class="title is-3" id="plantowatch">Plan to watch:</h3>
                 <table class="table is-bordered is-hoverable">
                     <thead>
                         <tr>
-                            <th><abbr title="Postition in list">Index</abbr></th>
+                            <th><abbr title="Index">#</abbr></th>
                             <th width="250px">Title</th>
                             <th>Score</th>
-                            <th width="250px">Progress</th>
+                            <th width="150px">Progress</th>
                             <th>Type</th>
                             <th>Rewatch?</th>
-                            <th>❤️</th>
-                            <th>Comment</th>
+                            <th data-sort-method="none" class="unscrollable">❤️</th>
+                            <th data-sort-method="none" class="unscrollable">Comment</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -303,7 +361,7 @@ else {
                             
                             if ($data["is_deleted"] === "yes") {
                                 continue;
-                            }
+                            }                         
                         
                         ?>
                         <tr>
@@ -314,8 +372,8 @@ else {
                             <td><?= $data["title"]; ?></td>
                             
                             <!-- Score -->
-                            <td>
-                                <form action="/update-entry.php" method="post">
+                            <td style="width: 75px;" data-sort="<?= $data["score"]; ?>">
+                                <form action="/change-score.php" method="post">
                                     <input type="hidden" name="entry" value="<?= $data["index"]; ?>"/>
                                     <select name="form-score-change" id="score" onchange="this.form.submit()">
                                       <option value="change-0" <?php if ($data["score"] === 0) { echo 'selected'; } ?>>🤔</option>
@@ -325,12 +383,17 @@ else {
                                       <option value="change-4" <?php if ($data["score"] === 4) { echo 'selected'; } ?>>4/5</option>
                                       <option value="change-5" <?php if ($data["score"] === 5) { echo 'selected'; } ?>>5/5</option>
                                     </select>
-                                </form>
+                                    <?php if ($data["score"] === 1) { ?> <div style="height: 24px; position: absolute; transform: translateX(+700%); display: inline;"><img src="images/1-dot.png" width="7px" height="7px" style="margin: 0; padding 0; transform: translateY(-50%);"></div> <?php } ?>
+                                    <?php if ($data["score"] === 2) { ?> <div style="height: 24px; position: absolute; transform: translateX(+700%); display: inline;"><img src="images/2-dot.png" width="7px" height="7px" style="margin: 0; padding 0; transform: translateY(-50%);"></div> <?php } ?>
+                                    <?php if ($data["score"] === 3) { ?> <div style="height: 24px; position: absolute; transform: translateX(+700%); display: inline;"><img src="images/3-dot.png" width="7px" height="7px" style="margin: 0; padding 0; transform: translateY(-50%);"></div> <?php } ?>
+                                    <?php if ($data["score"] === 4) { ?> <div style="height: 24px; position: absolute; transform: translateX(+700%); display: inline;"><img src="images/4-dot.png" width="7px" height="7px" style="margin: 0; padding 0; transform: translateY(-50%);"></div> <?php } ?>
+                                    <?php if ($data["score"] === 5) { ?> <div style="height: 24px; position: absolute; transform: translateX(+700%); display: inline;"><img src="images/5-dot.png" width="7px" height="7px" style="margin: 0; padding 0; transform: translateY(-50%);"></div> <?php } ?>
+                                </form> 
                             </td>
                             
                             <!-- Progress -->
-                            <td>
-                                <form action="/update-entry.php" method="post">
+                            <td data-sort="<?= $data["progress_length"]; ?>">
+                                <form action="/change-progress.php" method="post">
                                     <input type="hidden" name="entry" value="<?= $data["index"]; ?>"/>
                                     <button style="margin-right: 5px;" type="submit" name="form-progress-subtract" value="1">-1</button>
                                     <span style="display: inline-block; width: 65px;"><?= $data["progress"]; ?>/<?= $data["progress_length"]; ?></span>
@@ -343,7 +406,7 @@ else {
                             
                             <!-- Rewatch -->
                             <td>
-                                <form action="/update-entry.php" method="post">
+                                <form action="/increment-rewatch.php" method="post">
                                     <span style=""><?= $data["rewatch"]; ?>x</span>
                                     <input type="hidden" name="entry" value="<?= $data["index"]; ?>"/>
                                     <button style="float: right;" type="submit" name="form-rewatch-add" value="1">+1</button>
@@ -352,7 +415,7 @@ else {
                             
                             <!-- Favorite -->
                             <td>
-                                <form action="/update-entry.php" method="post">
+                                <form action="/favorite.php" method="post">
                                     <input type="hidden" name="entry" value="<?= $data["index"]; ?>"/>
                                     <input type="hidden" name="form-isCheckmark" value="1"/>
                                     <div class="checkmark">
@@ -362,25 +425,25 @@ else {
                             </td>
                             
                             <!-- Comment -->
-                            <td><?= $data["comment"]; ?></td>
+                            <td><?php if(!empty($data["comment"])) { echo $data["comment"]; } else { echo "n/a"; }?></td>
                         </tr>
                         <?php } ?>
                     </tbody>
-                </table>            
+                </table>
 
                 <!-- Watching -->
-                <h3 class="title is-3 animate__animated animate__fadeIn">Watching:</h3>
+                <h3 class="title is-3" id="watching">Watching:</h3>
                 <table class="table is-bordered is-hoverable">
                     <thead>
                         <tr>
-                            <th><abbr title="Postition in list">Index</abbr></th>
+                            <th><abbr title="Index">#</abbr></th>
                             <th width="250px">Title</th>
                             <th>Score</th>
-                            <th width="250px">Progress</th>
+                            <th width="150px">Progress</th>
                             <th>Type</th>
                             <th>Rewatch?</th>
-                            <th>❤️</th>
-                            <th>Comment</th>
+                            <th data-sort-method="none" class="unscrollable">❤️</th>
+                            <th data-sort-method="none" class="unscrollable">Comment</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -402,7 +465,7 @@ else {
                             
                             if ($data["is_deleted"] === "yes") {
                                 continue;
-                            }
+                            }                          
                         
                         ?>
                         <tr>
@@ -413,8 +476,8 @@ else {
                             <td><?= $data["title"]; ?></td>
                             
                             <!-- Score -->
-                            <td>
-                                <form action="/update-entry.php" method="post">
+                            <td style="width: 75px;" data-sort="<?= $data["score"]; ?>">
+                                <form action="/change-score.php" method="post">
                                     <input type="hidden" name="entry" value="<?= $data["index"]; ?>"/>
                                     <select name="form-score-change" id="score" onchange="this.form.submit()">
                                       <option value="change-0" <?php if ($data["score"] === 0) { echo 'selected'; } ?>>🤔</option>
@@ -424,12 +487,17 @@ else {
                                       <option value="change-4" <?php if ($data["score"] === 4) { echo 'selected'; } ?>>4/5</option>
                                       <option value="change-5" <?php if ($data["score"] === 5) { echo 'selected'; } ?>>5/5</option>
                                     </select>
-                                </form>
+                                    <?php if ($data["score"] === 1) { ?> <div style="height: 24px; position: absolute; transform: translateX(+700%); display: inline;"><img src="images/1-dot.png" width="7px" height="7px" style="margin: 0; padding 0; transform: translateY(-50%);"></div> <?php } ?>
+                                    <?php if ($data["score"] === 2) { ?> <div style="height: 24px; position: absolute; transform: translateX(+700%); display: inline;"><img src="images/2-dot.png" width="7px" height="7px" style="margin: 0; padding 0; transform: translateY(-50%);"></div> <?php } ?>
+                                    <?php if ($data["score"] === 3) { ?> <div style="height: 24px; position: absolute; transform: translateX(+700%); display: inline;"><img src="images/3-dot.png" width="7px" height="7px" style="margin: 0; padding 0; transform: translateY(-50%);"></div> <?php } ?>
+                                    <?php if ($data["score"] === 4) { ?> <div style="height: 24px; position: absolute; transform: translateX(+700%); display: inline;"><img src="images/4-dot.png" width="7px" height="7px" style="margin: 0; padding 0; transform: translateY(-50%);"></div> <?php } ?>
+                                    <?php if ($data["score"] === 5) { ?> <div style="height: 24px; position: absolute; transform: translateX(+700%); display: inline;"><img src="images/5-dot.png" width="7px" height="7px" style="margin: 0; padding 0; transform: translateY(-50%);"></div> <?php } ?>
+                                </form> 
                             </td>
                             
                             <!-- Progress -->
-                            <td>
-                                <form action="/update-entry.php" method="post">
+                            <td data-sort="<?= $data["progress_length"]; ?>">
+                                <form action="/change-progress.php" method="post">
                                     <input type="hidden" name="entry" value="<?= $data["index"]; ?>"/>
                                     <button style="margin-right: 5px;" type="submit" name="form-progress-subtract" value="1">-1</button>
                                     <span style="display: inline-block; width: 65px;"><?= $data["progress"]; ?>/<?= $data["progress_length"]; ?></span>
@@ -442,7 +510,7 @@ else {
                             
                             <!-- Rewatch -->
                             <td>
-                                <form action="/update-entry.php" method="post">
+                                <form action="/increment-rewatch.php" method="post">
                                     <span style=""><?= $data["rewatch"]; ?>x</span>
                                     <input type="hidden" name="entry" value="<?= $data["index"]; ?>"/>
                                     <button style="float: right;" type="submit" name="form-rewatch-add" value="1">+1</button>
@@ -451,7 +519,7 @@ else {
                             
                             <!-- Favorite -->
                             <td>
-                                <form action="/update-entry.php" method="post">
+                                <form action="/favorite.php" method="post">
                                     <input type="hidden" name="entry" value="<?= $data["index"]; ?>"/>
                                     <input type="hidden" name="form-isCheckmark" value="1"/>
                                     <div class="checkmark">
@@ -461,25 +529,25 @@ else {
                             </td>
                             
                             <!-- Comment -->
-                            <td><?= $data["comment"]; ?></td>
+                            <td><?php if(!empty($data["comment"])) { echo $data["comment"]; } else { echo "n/a"; }?></td>
                         </tr>
                         <?php } ?>
                     </tbody>
                 </table>
 
                 <!-- Completed -->
-                <h3 class="title is-3 animate__animated animate__fadeIn">Completed:</h3>
+                <h3 class="title is-3" id="completed">Completed:</h3>
                 <table class="table is-bordered is-hoverable">
                     <thead>
                         <tr>
-                            <th><abbr title="Postition in list">Index</abbr></th>
+                            <th><abbr title="Index">#</abbr></th>
                             <th width="250px">Title</th>
                             <th>Score</th>
-                            <th width="250px">Progress</th>
+                            <th width="150px">Progress</th>
                             <th>Type</th>
                             <th>Rewatch?</th>
-                            <th>❤️</th>
-                            <th>Comment</th>
+                            <th data-sort-method="none" class="unscrollable">❤️</th>
+                            <th data-sort-method="none" class="unscrollable">Comment</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -508,8 +576,8 @@ else {
                             <td><?= $data["title"]; ?></td>
                             
                             <!-- Score -->
-                            <td>
-                                <form action="/update-entry.php" method="post">
+                            <td style="width: 75px;" data-sort="<?= $data["score"]; ?>">
+                                <form action="/change-score.php" method="post">
                                     <input type="hidden" name="entry" value="<?= $data["index"]; ?>"/>
                                     <select name="form-score-change" id="score" onchange="this.form.submit()">
                                       <option value="change-0" <?php if ($data["score"] === 0) { echo 'selected'; } ?>>🤔</option>
@@ -519,12 +587,17 @@ else {
                                       <option value="change-4" <?php if ($data["score"] === 4) { echo 'selected'; } ?>>4/5</option>
                                       <option value="change-5" <?php if ($data["score"] === 5) { echo 'selected'; } ?>>5/5</option>
                                     </select>
-                                </form>
+                                    <?php if ($data["score"] === 1) { ?> <div style="height: 24px; position: absolute; transform: translateX(+700%); display: inline;"><img src="images/1-dot.png" width="7px" height="7px" style="margin: 0; padding 0; transform: translateY(-50%);"></div> <?php } ?>
+                                    <?php if ($data["score"] === 2) { ?> <div style="height: 24px; position: absolute; transform: translateX(+700%); display: inline;"><img src="images/2-dot.png" width="7px" height="7px" style="margin: 0; padding 0; transform: translateY(-50%);"></div> <?php } ?>
+                                    <?php if ($data["score"] === 3) { ?> <div style="height: 24px; position: absolute; transform: translateX(+700%); display: inline;"><img src="images/3-dot.png" width="7px" height="7px" style="margin: 0; padding 0; transform: translateY(-50%);"></div> <?php } ?>
+                                    <?php if ($data["score"] === 4) { ?> <div style="height: 24px; position: absolute; transform: translateX(+700%); display: inline;"><img src="images/4-dot.png" width="7px" height="7px" style="margin: 0; padding 0; transform: translateY(-50%);"></div> <?php } ?>
+                                    <?php if ($data["score"] === 5) { ?> <div style="height: 24px; position: absolute; transform: translateX(+700%); display: inline;"><img src="images/5-dot.png" width="7px" height="7px" style="margin: 0; padding 0; transform: translateY(-50%);"></div> <?php } ?>
+                                </form> 
                             </td>
                             
                             <!-- Progress -->
-                            <td>
-                                <form action="/update-entry.php" method="post">
+                            <td data-sort="<?= $data["progress_length"]; ?>">
+                                <form action="/change-progress.php" method="post">
                                     <input type="hidden" name="entry" value="<?= $data["index"]; ?>"/>
                                     <button style="margin-right: 5px;" type="submit" name="form-progress-subtract" value="1">-1</button>
                                     <span style="display: inline-block; width: 65px;"><?= $data["progress"]; ?>/<?= $data["progress_length"]; ?></span>
@@ -537,7 +610,7 @@ else {
                             
                             <!-- Rewatch -->
                             <td>
-                                <form action="/update-entry.php" method="post">
+                                <form action="/increment-rewatch.php" method="post">
                                     <span style=""><?= $data["rewatch"]; ?>x</span>
                                     <input type="hidden" name="entry" value="<?= $data["index"]; ?>"/>
                                     <button style="float: right;" type="submit" name="form-rewatch-add" value="1">+1</button>
@@ -546,7 +619,7 @@ else {
                             
                             <!-- Favorite -->
                             <td>
-                                <form action="/update-entry.php" method="post">
+                                <form action="/favorite.php" method="post">
                                     <input type="hidden" name="entry" value="<?= $data["index"]; ?>"/>
                                     <input type="hidden" name="form-isCheckmark" value="1"/>
                                     <div class="checkmark">
@@ -556,25 +629,25 @@ else {
                             </td>
                             
                             <!-- Comment -->
-                            <td><?= $data["comment"]; ?></td>
+                            <td><?php if(!empty($data["comment"])) { echo $data["comment"]; } else { echo "n/a"; }?></td>
                         </tr>
                         <?php } ?>
                     </tbody>
                 </table>
 
                 <!-- Favorites -->
-                <h3 class="title is-3 animate__animated animate__fadeIn">Favorites:</h3>
+                <h3 class="title is-3" id="favorites">Favorites:</h3>
                 <table class="table is-bordered is-hoverable">
                     <thead>
                         <tr>
-                            <th><abbr title="Postition in list">Index</abbr></th>
+                            <th><abbr title="Index">#</abbr></th>
                             <th width="250px">Title</th>
                             <th>Score</th>
-                            <th width="250px">Progress</th>
+                            <th width="150px">Progress</th>
                             <th>Type</th>
                             <th>Rewatch?</th>
-                            <th>❤️</th>
-                            <th>Comment</th>
+                            <th data-sort-method="none" class="unscrollable">❤️</th>
+                            <th data-sort-method="none" class="unscrollable">Comment</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -588,7 +661,7 @@ else {
                             
                             if ($data["is_deleted"] === "yes") {
                                 continue;
-                            }
+                            }                           
                         
                         ?>
                         <tr>
@@ -599,8 +672,8 @@ else {
                             <td><?= $data["title"]; ?></td>
                             
                             <!-- Score -->
-                            <td>
-                                <form action="/update-entry.php" method="post">
+                            <td style="width: 75px;" data-sort="<?= $data["score"]; ?>">
+                                <form action="/change-score.php" method="post">
                                     <input type="hidden" name="entry" value="<?= $data["index"]; ?>"/>
                                     <select name="form-score-change" id="score" onchange="this.form.submit()">
                                       <option value="change-0" <?php if ($data["score"] === 0) { echo 'selected'; } ?>>🤔</option>
@@ -610,12 +683,17 @@ else {
                                       <option value="change-4" <?php if ($data["score"] === 4) { echo 'selected'; } ?>>4/5</option>
                                       <option value="change-5" <?php if ($data["score"] === 5) { echo 'selected'; } ?>>5/5</option>
                                     </select>
-                                </form>
+                                    <?php if ($data["score"] === 1) { ?> <div style="height: 24px; position: absolute; transform: translateX(+700%); display: inline;"><img src="images/1-dot.png" width="7px" height="7px" style="margin: 0; padding 0; transform: translateY(-50%);"></div> <?php } ?>
+                                    <?php if ($data["score"] === 2) { ?> <div style="height: 24px; position: absolute; transform: translateX(+700%); display: inline;"><img src="images/2-dot.png" width="7px" height="7px" style="margin: 0; padding 0; transform: translateY(-50%);"></div> <?php } ?>
+                                    <?php if ($data["score"] === 3) { ?> <div style="height: 24px; position: absolute; transform: translateX(+700%); display: inline;"><img src="images/3-dot.png" width="7px" height="7px" style="margin: 0; padding 0; transform: translateY(-50%);"></div> <?php } ?>
+                                    <?php if ($data["score"] === 4) { ?> <div style="height: 24px; position: absolute; transform: translateX(+700%); display: inline;"><img src="images/4-dot.png" width="7px" height="7px" style="margin: 0; padding 0; transform: translateY(-50%);"></div> <?php } ?>
+                                    <?php if ($data["score"] === 5) { ?> <div style="height: 24px; position: absolute; transform: translateX(+700%); display: inline;"><img src="images/5-dot.png" width="7px" height="7px" style="margin: 0; padding 0; transform: translateY(-50%);"></div> <?php } ?>
+                                </form> 
                             </td>
                             
                             <!-- Progress -->
-                            <td>
-                                <form action="/update-entry.php" method="post">
+                            <td data-sort="<?= $data["progress_length"]; ?>">
+                                <form action="/change-progress.php" method="post">
                                     <input type="hidden" name="entry" value="<?= $data["index"]; ?>"/>
                                     <button style="margin-right: 5px;" type="submit" name="form-progress-subtract" value="1">-1</button>
                                     <span style="display: inline-block; width: 65px;"><?= $data["progress"]; ?>/<?= $data["progress_length"]; ?></span>
@@ -628,7 +706,7 @@ else {
                             
                             <!-- Rewatch -->
                             <td>
-                                <form action="/update-entry.php" method="post">
+                                <form action="/increment-rewatch.php" method="post">
                                     <span style=""><?= $data["rewatch"]; ?>x</span>
                                     <input type="hidden" name="entry" value="<?= $data["index"]; ?>"/>
                                     <button style="float: right;" type="submit" name="form-rewatch-add" value="1">+1</button>
@@ -637,7 +715,7 @@ else {
                             
                             <!-- Favorite -->
                             <td>
-                                <form action="/update-entry.php" method="post">
+                                <form action="/favorite.php" method="post">
                                     <input type="hidden" name="entry" value="<?= $data["index"]; ?>"/>
                                     <input type="hidden" name="form-isCheckmark" value="1"/>
                                     <div class="checkmark">
@@ -647,36 +725,37 @@ else {
                             </td>
                             
                             <!-- Comment -->
-                            <td><?= $data["comment"]; ?></td>
+                            <td><?php if(!empty($data["comment"])) { echo $data["comment"]; } else { echo "n/a"; }?></td>
                         </tr>
                         <?php } ?>
                     </tbody>
                 </table>
-                
             </div>
         </main>
 
-        <!-- Footer -->
-        <footer class="marginUp">
-            <section class="hero is-info is-bold">
-                <div class="hero-body">
-                    <div class="container animate__animated animate__fadeInUp">
-                        <?= !empty($timestamp) ? '<span>Last updated: ' . $timestamp[0]["timestamp"] . " UTC</span>" : '' ?>
+        <!-- footer -->
+        <nav class="navbar is-dark marginUp">
+            <div id="navMenuColordark-example" class="navbar-menu">
+                <div class="container container-nav">
+                    <div class="navbar-start">
+                        <div class="container animate__animated animate__fadeInUp">
+                            <?php if (!empty($timestamp)) { echo "<span>Last updated: ".$timestamp[0]["timestamp"]." EEST</span>"; } ?>
+                        </div>                            
                     </div>
                 </div>
-            </section>
-        </footer>
+            </div>
+        </nav>
         
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="/js/jquery-3.4.1.min.js"></script>
         <script type="text/javascript">
             $(document).ready(function () {
 
-                if (localStorage.getItem("my_app_name_here-quote-scroll") != null) {
-                    $(window).scrollTop(localStorage.getItem("my_app_name_here-quote-scroll"));
+                if (localStorage.getItem("maltslist-quote-scroll") != null) {
+                    $(window).scrollTop(localStorage.getItem("maltslist-quote-scroll"));
                 }
 
                 $(window).on("scroll", function() {
-                    localStorage.setItem("my_app_name_here-quote-scroll", $(window).scrollTop());
+                    localStorage.setItem("maltslist-quote-scroll", $(window).scrollTop());
                 });
 
             });
@@ -742,6 +821,13 @@ else {
             setTimeout(function(){
                 $('#message-regular').fadeOut(250);
             }, 3000);
+        </script>
+        <script src='/js/tablesort.js'></script>
+        <script src='/js/sorts/tablesort.number.js'></script>
+        <script>
+            Array.prototype.forEach.call(document.getElementsByClassName('table'), el => {
+                new Tablesort(el);
+            });
         </script>
     </body>
 </html>
