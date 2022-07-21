@@ -16,10 +16,6 @@ if (isset($_GET["error_msg"], $_GET["error_title"])) {
     $error_title = $_GET["error_title"];
 }
 
-if (isset($_GET["error_img"])) {
-    $error_img = $_GET["error_img"];
-}
-
 if (isset($_GET["regular_msg"], $_GET["regular_title"])) {
     $regular_msg = $_GET["regular_msg"];
     $regular_title = $_GET["regular_title"];
@@ -27,9 +23,20 @@ if (isset($_GET["regular_msg"], $_GET["regular_title"])) {
 
 // check if db exists
 if (file_exists("../db/$database")) {
-    $db = new SQLite3("../db/" . $database, SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
-    $db->enableExceptions(true);
-    
+    try {
+        $db = new SQLite3("../db/" . $database, SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
+        $db->enableExceptions(true);
+        $dbOpenSuccess = true;
+    }
+    catch (Exception $e) {
+        $exceptionMessage = $e->getMessage();
+        $logger->FATAL("Unable to open database file due to excetion: $exceptionMessage");
+        $error_msg = "$exceptionMessage";
+        $error_title = "database exception";   
+    }
+}
+
+if ($dbOpenSuccess === true) {    
     // get current data
     $logger->info("Trying to query database for current list data");
     try {
@@ -37,6 +44,7 @@ if (file_exists("../db/$database")) {
         while ($row = $result->fetchArray(1)) {
             array_push($dataArray, $row);
         }
+        $querySuccess = true;
         $logger->info("Successfully queried database for current list data");
     }
     
@@ -44,7 +52,7 @@ if (file_exists("../db/$database")) {
         $exceptionMessage = $e->getMessage();
         $logger->FATAL("Unable to query database for current list data due to excetion: $exceptionMessage");
         $error_msg = "$exceptionMessage";
-        $error_title = "db putsis";
+        $error_title = "database exception";
     }
     
     // get timestamp
@@ -61,7 +69,7 @@ if (file_exists("../db/$database")) {
         $exceptionMessage = $e->getMessage();
         $logger->FATAL("Unable to query database for last timestamp due to excetion: $exceptionMessage");
         $error_msg = "$exceptionMessage";
-        $error_title = "db putsis";
+        $error_title = "database exception";
     }
     
     // close
@@ -71,7 +79,7 @@ if (file_exists("../db/$database")) {
 else {
     $logger->FATAL("database file doesn't exist");
     $error_msg = "File doesn't exist. Please run setupDatabase.php";
-    $error_title = "db putsis";
+    $error_title = "database missing";
 }
 
 ?>
@@ -302,13 +310,6 @@ else {
                     </div>
                     <div class="message-body">
                         <?= $error_msg; ?>
-                        <?php
-                        if (isset($error_img)) {
-                        ?>
-                        <img src="
-                        <?= $error_img; ?>
-                        ">
-                        <?php } ?>
                     </div>
                 </article>
             </div>
@@ -331,6 +332,7 @@ else {
 
         <main>
             <div class="container">
+                <?php if ($querySuccess === true) { ?>
                 <!-- Plan to watch -->
                 <h3 class="title is-3" id="plantowatch">Plan to watch:</h3>
                 <table class="table is-bordered is-hoverable">
@@ -730,6 +732,7 @@ else {
                         <?php } ?>
                     </tbody>
                 </table>
+                <?php } ?>
             </div>
         </main>
 

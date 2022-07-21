@@ -16,10 +16,6 @@ if (isset($_GET["error_msg"], $_GET["error_title"])) {
     $error_title = $_GET["error_title"];
 }
 
-if (isset($_GET["error_img"])) {
-    $error_img = $_GET["error_img"];
-}
-
 if (isset($_GET["regular_msg"], $_GET["regular_title"])) {
     $regular_msg = $_GET["regular_msg"];
     $regular_title = $_GET["regular_title"];
@@ -37,6 +33,7 @@ if (file_exists("../db/$database")) {
         while ($row = $result->fetchArray(1)) {
             array_push($dataArray, $row);
         }
+        $querySuccess = true;
         $logger->info("Successfully queried database for current list data");
     }
     
@@ -44,7 +41,7 @@ if (file_exists("../db/$database")) {
         $exceptionMessage = $e->getMessage();
         $logger->FATAL("Unable to query database for current list data due to excetion: $exceptionMessage");
         $error_msg = "$exceptionMessage";
-        $error_title = "db putsis";
+        $error_title = "database exception";
     }
     
     // get timestamp
@@ -61,7 +58,7 @@ if (file_exists("../db/$database")) {
         $exceptionMessage = $e->getMessage();
         $logger->FATAL("Unable to query database for last timestamp due to excetion: $exceptionMessage");
         $error_msg = "$exceptionMessage";
-        $error_title = "db putsis";
+        $error_title = "database exception";
     }
     
     // close
@@ -71,7 +68,7 @@ if (file_exists("../db/$database")) {
 else {
     $logger->FATAL("database file doesn't exist");
     $error_msg = "File doesn't exist. Please run setupDatabase.php";
-    $error_title = "db putsis";
+    $error_title = "database missing";
 }
 
 ?>
@@ -123,8 +120,37 @@ else {
             </nav>
         </header>
 
+        <!-- message error -->
+        <?php if (isset($error_msg) && isset($error_title)) { ?>
+        <div id="message-error" class="container container-message marginUp marginDown">
+            <article class="message message-error-body is-danger">
+                <div class="message-header">
+                    <p>Error: <?= $error_title; ?></p>
+                </div>
+                <div class="message-body">
+                    <?= $error_msg; ?>
+                </div>
+            </article>
+        </div>
+        <?php } ?>
+        
+        <!-- message regular -->
+        <?php if (isset($regular_msg) && isset($regular_title)) { ?>
+        <div id="message-regular" class="container marginUp marginDown">
+            <article class="message message-regular-body is-primary">
+                <div class="message-header">
+                    <p><?= $regular_title; ?></p>
+                </div>
+                <div class="message-body">
+                    <?= $regular_msg; ?>
+                </div>
+            </article>
+        </div>
+        <?php } ?>
+
         <main>
             <div class="container">
+                <?php if ($querySuccess === true) { ?>
                 <!-- Plan to watch -->
                 <h3 class="title is-3" id="plantowatch">Plan to watch:</h3>
                 <table class="table is-bordered is-hoverable">
@@ -388,6 +414,7 @@ else {
                         <?php } ?>
                     </tbody>
                 </table>
+                <?php } ?>
             </div>
         </main>
 

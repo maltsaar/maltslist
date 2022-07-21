@@ -1,9 +1,5 @@
 <?php
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 require_once "../vendor/autoload.php";
 require_once "../config.php";
 
@@ -64,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if ($currentProgress-$formProgressSubtract<0) {
                 $logger->fatal("Progress check failed. Can't go below 0 in progress");
-                header("location:".$siteUrl."?error_title=Can't go below 0 in progress&error_msg=Really?&error_img=https://auk.wavy.ws/i/bdbse.png");
+                header("location:".$siteUrl."?error_title=Can't go below 0 in progress&error_msg=Really?");
             }
 
             else {
@@ -95,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             if ($currentProgress+$formProgressAdd>$allowedMaximumProgress) {
                 $logger->fatal("Progress check failed. Can't go past the limit specified in progress_length");
-                header("location:".$siteUrl."?error_title=Failed to change entry!&error_title=Can't go past the limit specified in progress_length&error_msg=Really?&error_img=https://auk.wavy.ws/i/bdbse.png");
+                header("location:".$siteUrl."?error_title=Failed to change entry!&error_title=Can't go past the limit specified in progress_length&error_msg=Really?");
             }
             
             else {
