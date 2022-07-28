@@ -96,6 +96,7 @@ else {
         
         <link rel="icon" type="image/png" href="/images/rei.png"/>
         <title>maltslist</title>
+
         <link rel="stylesheet" href="/css/bulma-0.9.4.min.css">
         <link rel="stylesheet" href="/css/style.css">
         <link rel="stylesheet" href="/css/animate-4.1.1.min.css"/>
