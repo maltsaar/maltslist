@@ -3,10 +3,6 @@
 require_once "../vendor/autoload.php";
 require_once "../config.php";
 
-// configure logger
-Logger::configure("../config.php");
-$logger = Logger::getLogger('maltslist export-xlsx');
-
 // variables
 $timestamp = date("Y-m-d H:i:s");
 $dataArray = [];
@@ -17,7 +13,6 @@ if (file_exists("../db/$database")) {
     $db->enableExceptions(true);
 
     // get current data
-    $logger->info("Trying to query database for current list data");
     try {
         $result = $db->query("SELECT * from 'list'");
 
@@ -28,18 +23,14 @@ if (file_exists("../db/$database")) {
     
     catch (Exception $e) {
         $exceptionMessage = $e->getMessage();
-        $logger->FATAL("Unable to query database for current list data due to excetion: $exceptionMessage");
         header("location:".$siteUrl."?error_title=db putsis!&error_msg=$exceptionMessage");
         exit;
     }
 }
 
 else {
-    $logger->FATAL("database file doesn't exist");
     header("location:".$siteUrl."?error_title=db putsis!&error_msg=File doesn't exist. Please run setupDatabase.php");
 }
-
-$logger->info("Successfully queried database for current list data");
 
 $tempFile = tmpfile();
 

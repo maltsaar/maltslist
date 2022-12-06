@@ -8,7 +8,7 @@ A simple way to keep track of movies and tv shows
 * No Auth (Use SSO solution like Authelia instead)
 * Static version of the list alongside dynamic one
 * CSV Export
-* Syslog style logging
+* ~~Syslog style logging~~
 
 ### Planned features
 * An info button next to a list item that would open a modal and show IMDB info about the entry
