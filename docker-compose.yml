@@ -12,5 +12,3 @@ services:
       DATABASE: ${DATABASE}
       TMDB_API_KEY: ${TMDB_API_KEY}
       TMDB_INCLUDE_ADULT: ${TMDB_INCLUDE_ADULT}
-    ports:
-      - 8424:8424
