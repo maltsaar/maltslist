@@ -1,0 +1,3 @@
+.env
+db/maltslist.sqlite3
+src/scripts/api-test.php

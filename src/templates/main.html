@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+        <link rel="icon" type="image/png" href="/images/rei.png"/>
+        <title>maltslist</title>
+
+        <link rel="stylesheet" href="/css/bootstrap-5.3.1.min.css">
+
+        <link rel="stylesheet" href="/css/style.css">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+ 
+        <link rel="stylesheet" href="/css/swal2-dark-custom.css"/>
+       
+        <!-- fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> 
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css" integrity="sha256-XoaMnoYC5TH6/+ihMEnospgm0J1PM/nioxbOUdnM8HY=" crossorigin="anonymous">
+        
+        <!-- htmx -->
+        <script src="js/htmx-1.9.4.min.js"></script>
+        <script src="js/htmx-response-targets.js"></script>
+    </head>
+
+    <body data-bs-theme="dark" hx-ext="response-targets">
+        <main>
+            <!-- navbar -->
+            <div class="container responsive-mtb">
+                <div onclick="parent.location=''" class="d-inline header-image-container">
+                    <img class="rounded" src="/images/rei.png" width="100">
+                </div>
+            </div>
+
+            <div class="container mt-3 d-flex flex-row">
+                {% if not caughtException %}
+                <div class="attractive-button flex-entry d-flex align-items-center justify-content-center rounded" data-bs-toggle="modal" data-bs-target="#modal-ae">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                </div>
+
+                <div onclick="parent.location='#Plan to watch'" class="attractive-button flex-entry d-flex align-items-center justify-content-center rounded ms-2">
+                    <span>Plan to watch</span>
+                </div>
+
+                <div onclick="parent.location='#Completed'" class="attractive-button flex-entry d-flex align-items-center justify-content-center rounded ms-2">
+                    <span>Completed</span>
+                </div>
+
+                <div onclick="parent.location='#Favorites'" class="attractive-button flex-entry d-flex align-items-center justify-content-center rounded ms-2">
+                    <span>Favorites</span>
+                </div>
+                {% endif %}
+                <div class="attractive-button flex-entry d-flex align-items-center justify-content-center rounded {% if not caughtException %} ms-2 {% endif %}" data-bs-toggle="modal" data-bs-target="#modalLegal">
+                    <span>About</span>
+                </div>
+            </div>
+
+            {% if not caughtException %}
+            <div id="lists-container" hx-get="/ajax-gd.php" hx-trigger="load" hx-target="#lists-container" hx-target-*="#lists-container" class="container">
+                <div class="mt-3">
+                    <h5 class="fw-semibold">Loading...</h5>
+                </div>
+            </div>
+            {% else %}
+            <div id="lists-container" class="container">
+                <div class="mt-3">
+                    <h5 class="fw-semibold">{{ caughtExceptionMessage }}</h5>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if not caughtException %}
+            <div class="container mt-3 pb-3 d-flex flex-column">
+                {% if timestamp %}
+                <span>Last updated: {{ timestamp }}</span>
+                {% endif %}
+            </div>
+            {% endif %}
+        </main>
+
+        {% if not caughtException %}
+        <div onclick="scrollToTop();" id="scroll-top" class="attractive-button-scroll-top flex-entry d-flex align-items-center justify-content-center rounded">
+            <i class="fa fa-arrow-up" aria-hidden="true"></i>
+        </div>
+        {% endif %}
+
+        {{ include("modal-legal.html") }}
+        {{ include("modal-ae.html") }}
+        {{ include("modal-ce.html") }}
+
+        
+        <script src="js/bootstrap-5.3.1.bundle.min.js"></script>        
+        <script src="js/sweetalert2.min.js"></script>
+        <script src="js/list-2.3.1.min.js"></script>
+
+        <!-- maltslist.js -->
+        <script src="js/maltslist.js" defer></script>
+    </body>
+</html>

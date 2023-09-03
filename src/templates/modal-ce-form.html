@@ -1,0 +1,102 @@
+{% if entry.type == "film" %}
+    {% set tmdb_url_type = "movie" %}
+{% else %}
+    {% set tmdb_url_type = "tv" %}
+{% endif %}
+
+{% if htmx_error_title is defined and htmx_error_body is defined %}
+<script>
+    swalPopup("error", "{{ htmx_error_title }}", "{{ htmx_error_body | raw }}");
+</script>
+{% endif %}
+
+<div id="me-banner" class="banner-hero rounded-top" style="background-image:url(https://image.tmdb.org/t/p/original/{{ entry.tmdb_banner }})">
+    <button type="button" class="btn-close modal-close-button" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="cover">
+        <img src="https://image.tmdb.org/t/p/original/{{ entry.tmdb_cover }}" id="me-cover" class="rounded">
+    </div>
+    <div class="title">
+        <h1 id="me-title">{{ entry.title }} {{ entry.season }} ({{ entry.year }})</h1>
+    </div>
+</div>
+
+<div class="body pb-3">
+    <div class="d-flex">
+        <div class="me-2">
+            <i class="fa fa-info-circle" aria-hidden="true"></i>
+        </div>
+        <div style="max-width: content;">
+            <a id="me-tmdb_id" href="https://www.themoviedb.org/{{ tmdb_url_type }}/{{ entry.tmdb_id }}" target="_blank">{{ entry.tmdb_id }}</a>
+        </div>
+    </div>
+
+    <div class="d-flex mt-2">
+        <div class="me-2">
+            <i class="fa fa-quote-left" aria-hidden="true"></i>
+        </div>
+        <div style="max-width: content;">
+            <p id="me-description">{{ entry.tmdb_description }}</p>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <div class="row">
+            <div class="col">
+                <label for="score" class="form-label">Score</label>
+                <select name="form-score" id="me-score" class="form-select" aria-label="Default select example">
+                <option {% if entry.score == 0 %} selected {% endif %} value="0">🤔</option>
+                <option {% if entry.score == 1 %} selected {% endif %} value="1">1</option>
+                <option {% if entry.score == 2 %} selected {% endif %} value="2">2</option>
+                <option {% if entry.score == 3 %} selected {% endif %} value="3">3</option>
+                <option {% if entry.score == 4 %} selected {% endif %} value="4">4</option>
+                <option {% if entry.score == 5 %} selected {% endif %} value="5">5</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row mt-2">
+            <div class="col">
+                <div class="row">
+                <div class="col">
+                    <label for="progress" class="form-label">Progress</label>
+                    <input value="{{ entry.progress }}" name="form-progress" id="me-progress" type="number" class="form-control transparent-input" autocomplete="off">
+                </div>
+                <div class="col">
+                    <label for="progress" class="form-label">Length</label>
+                    <input value="{{ entry.progress_length }}" name="form-progress-length" id="me-progress_length" type="number" class="form-control transparent-input" autocomplete="off">
+                </div>
+                </div>
+            </div>
+
+        <div class="col">
+            <div class="row">
+                <div class="col">
+                    <label for="type" class="form-label">Type</label>
+                    <select name="form-type" id="me-type" class="form-select transparent-select" id="type">
+                    <option {% if entry.type == "film" %} selected {% endif %} value="film">Film</option>
+                    <option {% if entry.type == "tv"   %} selected {% endif %} value="tv">TV</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label for="rewatchCount" class="form-label">Rewatch</label>
+                    <input value="{{ entry.rewatch }}" name="form-rewatch" id="me-rewatch" type="number" class="form-control transparent-input" autocomplete="off">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="mt-2">
+        <label for="comment" class="form-label">Comment</label>
+        <textarea name="form-comment" id="me-comment" class="form-control transparent-textarea" rows="3">{{ entry.comment }}</textarea>
+        </div>
+    </div>
+
+    <div class="mb-1 form-check">
+        <label class="form-check-label" for="flexCheckDefault">Favorite</label>
+        <input name="form-favorite" type="hidden" value="off">
+        <input name="form-favorite" {% if entry.favorite == "on" %} checked {% endif %} id="me-favorite" class="form-check-input" type="checkbox" id="me-favorite">
+    </div>
+
+    <input type="hidden" id="me-index-form" name="form-index" value="{{ entry.index }}"/>
+</div>

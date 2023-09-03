@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  maltslist:
+    network_mode: "host"
+    build:
+      dockerfile: Dockerfile
+    image: maltslist
+    restart: always
+    volumes:
+      - ./db:/var/www/src/db
+    environment:
+      DATABASE: ${DATABASE}
+      TMDB_API_KEY: ${TMDB_API_KEY}
+      TMDB_INCLUDE_ADULT: ${TMDB_INCLUDE_ADULT}
+    ports:
+      - 8424:8424

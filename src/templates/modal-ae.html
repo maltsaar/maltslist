@@ -1,0 +1,113 @@
+{% if htmx_error_title is defined and htmx_error_body is defined %}
+<script>
+    swalPopup("error", "{{ htmx_error_title }}", "{{ htmx_error_body | raw }}");
+</script>
+{% endif %}
+
+<!-- Modal: Add Entry -->
+<div class="modal fade" id="modal-ae" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog rounded">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title">Add entry</h5>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		</div>
+	    <div class="p-3">
+		<form id="ae-form" hx-post="/ajax-ae.php" hx-target="#ae-form" hx-target-*="#ae-form" hx-swap="beforeend">
+		    <div class="row">
+			<div class="col">
+			    <label for="progress" class="form-label">Title</label>
+			    <input placeholder="Pulp Fiction"
+				   type="text"
+				   class="form-control"
+				   name="form-title"
+				   id="title"
+				   autocomplete="off">
+			</div>
+			<div class="col-3">
+				<label for="season" class="form-label">Season</label>
+				<input placeholder="n/a" type="number" class="form-control transparent-input" name="form-season" id="season" autocomplete="off">
+			</div>
+			<div class="col-3">
+			    <label for="year" class="form-label">Year</label>
+			    <input placeholder="1994" 
+				   type="number"
+				   class="form-control"
+				   name="form-year"
+				   id="year"
+				   min="1900"
+				   max="2100"
+				   autocomplete="off">
+			</div>
+		    </div>
+
+		    <div class="row mt-2">
+			<div class="col">
+			    <label for="score" class="form-label">Score</label>
+			    <select class="form-select" name="form-score" id="score" aria-label="Default select example">
+				<option value="0" selected>🤔 (I haven't decided yet)</option>
+				<option value="1">1 (Very poor)</option>
+				<option value="2">2 (Poor)</option>
+				<option value="3">3 (Fair)</option>
+				<option value="4">4 (Good)</option>
+				<option value="5">5 (Excellent)</option>
+			    </select>
+			</div>
+		    </div>
+
+		    <div class="row mt-2">
+			<div class="col">
+			    <div class="row">
+				<div class="col">
+				    <label for="progress" class="form-label">Progress</label>
+				    <input type="number" class="form-control transparent-input" name="form-progress" id="progress" value="0" autocomplete="off">
+				</div>
+				<div class="col">
+				    <label for="progress_length" class="form-label">Length</label>
+				    <input type="number" class="form-control transparent-input" name="form-progress-length" id="progress_length" value="1" autocomplete="off">
+				</div>
+			    </div>
+			</div>
+
+			<div class="col">
+			    <div class="row">
+				<div class="col">
+				    <label for="type" class="form-label">Type</label>
+				    <select class="form-select transparent-select" name="form-type" id="type">
+					<option selected value="film">Film</option>
+					<option value="tv">TV</option>
+				    </select>
+				</div>
+				<div class="col">
+				    <label for="rewatchCount" class="form-label">Rewatch</label>
+				    <input type="number" class="form-control transparent-input" name="form-rewatch" id="rewatchCount" value="0" autocomplete="off">
+				</div>
+			    </div>
+			</div>
+		    </div>
+
+		    <div class="mt-2">
+			<label for="comment" class="form-label">Comment</label>
+			<textarea placeholder="What's in the briefcase? :O"
+				  class="form-control transparent-textarea"
+				  name="form-comment"
+				  id="comment"
+				  rows="3"></textarea>
+		    </div>
+
+		    <div class="mt-2">
+			<label for="type" class="form-label">Favorite</label>
+			<select class="form-select transparent-select" name="form-favorite" id="favorite">
+			    <option selected value="off">No</option>
+			    <option value="on">Yes</option>
+			</select>
+		    </div>
+
+		    <div class="mt-2">
+			<button type="submit" class="btn btn-secondary">Submit</button>
+		    </div>
+		</form>
+	    </div>
+	</div>
+    </div>
+</div>
