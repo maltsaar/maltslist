@@ -16,6 +16,7 @@ A simple way to keep track of movies and tv shows
 | Authentication | No |
 | API | Will add later |
 | Docker dev environment | Will add later |
+| CI and Releases | Will add later |
 
 ## Usage
 
@@ -39,7 +40,7 @@ docker compose build
 docker compose up -d
 ```
 
-## Current issues
+## Known issues
 
 * If every list type isn't populated sorting might not work properly
 
