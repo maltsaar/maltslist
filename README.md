@@ -1,6 +1,10 @@
 # maltslist
 A simple way to keep track of movies and tv shows
 
+## Disclaimer
+
+If you're planning on serving this over the internet you should be using some sort of authentication mechanism like authelia or keycloak.
+
 ## Feature table
 
 | Feature | Status |
@@ -9,6 +13,7 @@ A simple way to keep track of movies and tv shows
 | Editing entries | Yes |
 | Deleting entries | Will add later |
 | Sorting entries | Yes (Current state is a bit buggy) |
+| Static read only site running on a different port | Will add later | 
 | Mobile device support | Yes |
 | TMDB API integration | Yes |
 | anilist.co API integration | Will add later |
@@ -20,12 +25,22 @@ A simple way to keep track of movies and tv shows
 
 ## Usage
 
+### Obtain a TMDB API key
+
+Read more [here](https://developer.themoviedb.org/docs/getting-started)
+
 ### Set your environment variables in .env
 
 ```
 DATABASE=maltslist-sample.sqlite3
 TMDB_API_KEY=tokengoeshere
 TMDB_INCLUDE_ADULT=true
+```
+
+### Set permissions for the db folder and sqlite3 database
+
+```
+chown -R 65534:65534 db
 ```
 
 ### Build the container
