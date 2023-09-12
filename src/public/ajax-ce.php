@@ -7,7 +7,13 @@ require_once "../includes/bootstrap-twig.php";
 
 if ($_SERVER["REQUEST_METHOD"] === "GET") {
     // form GET variables
-    $index = (int) trim($_GET["id"]);
+    if (!empty($_GET["id"])) {
+        $index = (int) trim($_GET["id"]);
+    } else {
+        http_response_code(418);
+        echo "I'm a teapot!";
+        die();
+    }
 
     // get the actual entry
     $db = new database();
