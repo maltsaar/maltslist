@@ -1,3 +1,6 @@
 .env
 db/maltslist.sqlite3
+db/maltslist.sqlite3.bak
 src/scripts/api-test.php
+src/vendor
+src/composer.lock

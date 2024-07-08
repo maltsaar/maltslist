@@ -11,6 +11,7 @@ $loader = new \Twig\Loader\FilesystemLoader("../templates");
 
  // Instantiate our Twig
 $twig = new \Twig\Environment($loader, [
-    'debug' => TWIG_DEBUG
+    'debug' => TWIG_DEBUG,
+    'use_yield' => true
 ]);
 $twig->addExtension(new \Twig\Extension\DebugExtension());

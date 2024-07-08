@@ -1,12 +1,13 @@
-version: '3.8'
 services:
   maltslist:
     network_mode: "host"
+    tty: true
     build:
       dockerfile: Dockerfile
     image: maltslist
     restart: always
     volumes:
+      - ./src:/var/www/src
       - ./db:/var/www/src/db
     environment:
       DATABASE: ${DATABASE}
