@@ -10,13 +10,11 @@
     <tr>
         <th>Title Season (Year)</th>
         <th>Score</th>
-        <th>Country</th>
     </tr>
     {% for entry in list %}
     <tr>
         <td>{{ entry.title }} {{ entry.season }} ({{ entry.year }})</td>
         <td>{% if entry.score == 0 %} 🤔 {% else %} {{ entry.score }} {% endif %}</td>
-        <td>Germany</td>
     </tr>
     {% endfor %}
 </table>
