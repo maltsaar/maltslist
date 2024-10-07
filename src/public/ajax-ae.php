@@ -13,35 +13,41 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 }
 
 // form POST variables
-$title           = (string) trim($_POST["form-title"]);
-$year            = (int)    trim($_POST["form-year"]);
-$season          = (int)    trim($_POST["form-season"]);
-$score           = (int)    trim($_POST["form-score"]);
-$progress        = (int)    trim($_POST["form-progress"]);
-$progress_length = (int)    trim($_POST["form-progress-length"]);
-$type            = (string) trim($_POST["form-type"]);
-$rewatch         = (int)    trim($_POST["form-rewatch"]);
-$favorite        = (string) trim($_POST["form-favorite"]);
-$comment         = (string) trim($_POST["form-comment"]);
+$title = (string) trim($_POST["form-title"]);
+$year = (int) trim($_POST["form-year"]);
+$season = (int) trim($_POST["form-season"]);
+$score = (int) trim($_POST["form-score"]);
+$progress = (int) trim($_POST["form-progress"]);
+$progress_length = (int) trim($_POST["form-progress-length"]);
+$type = (string) trim($_POST["form-type"]);
+$rewatch = (int) trim($_POST["form-rewatch"]);
+$favorite = (string) trim($_POST["form-favorite"]);
+$comment = (string) trim($_POST["form-comment"]);
 
 //
 // check user input
 //
 
 if (!isset($title, $score, $progress, $progress_length, $rewatch, $favorite)) {
-    error("Missing required POST parameter!", "One of these parameters was not set: form-title, form-score, form-progress, form-progress-length, form-rewatch, form-favorite");
+    error(
+        "Missing required POST parameter!",
+        "One of these parameters was not set: form-title, form-score, form-progress, form-progress-length, form-rewatch, form-favorite"
+    );
 }
 
 if (empty($title) && !is_numeric($title)) {
-    error("Failed to add entry!","Title can't be empty!");
+    error("Failed to add entry!", "Title can't be empty!");
 }
 
 if (empty($year)) {
-    error("Failed to add entry!","Year can't be empty!");
+    error("Failed to add entry!", "Year can't be empty!");
 }
 
-if ($progress_length<$progress) {
-    error("Failed to add entry!", "Progress ($progress) is bigger than Total length ($progress_length)");
+if ($progress_length < $progress) {
+    error(
+        "Failed to add entry!",
+        "Progress ($progress) is bigger than Total length ($progress_length)"
+    );
 }
 
 if (!empty($season)) {
@@ -83,16 +89,16 @@ try {
 }
 
 if (!isset($tmdbData["results"][0])) {
-    error("Failed to add entry!","TMDB API was unable to find anything");
+    error("Failed to add entry!", "TMDB API was unable to find anything");
 }
 
 // we only need the first result
 $tmdbData = $tmdbData["results"][0];
 
-$id          = $tmdbData["id"];
+$id = $tmdbData["id"];
 $description = $tmdbData["overview"];
-$cover       = $tmdbData["poster_path"];
-$banner      = $tmdbData["backdrop_path"];
+$cover = $tmdbData["poster_path"];
+$banner = $tmdbData["backdrop_path"];
 
 //
 // db
@@ -107,7 +113,10 @@ if (!empty($duplicateCheck)) {
         error("Failed to add entry!", "Entry with this title already exists.");
     } else {
         if ($season === $duplicateCheck["season"]) {
-            error("Failed to add entry!", "Entry with this title and season already exists.");
+            error(
+                "Failed to add entry!",
+                "Entry with this title and season already exists."
+            );
         }
     }
 }
@@ -128,8 +137,8 @@ try {
         $cover,
         $banner,
         $description
-    );    
-} catch(Exception $e) {
+    );
+} catch (Exception $e) {
     error("Caught database exception", $e->getMessage());
 }
 
@@ -139,18 +148,17 @@ $db->close();
 $index = $entry["index"];
 header("entry_index: ${index}");
 
-function error($title, $body) {
+function error($title, $body)
+{
     global $twig;
 
     http_response_code(418);
 
     $twigVariables = [
-        "htmx_error_title"   => $title,
-        "htmx_error_body"    => $body
+        "htmx_error_title" => $title,
+        "htmx_error_body" => $body,
     ];
     $twig->display("modal-ae.html", $twigVariables);
 
     die();
 }
-
-?>

@@ -11,13 +11,13 @@ try {
 
     $twigVariables = [
         "caughtException" => false,
-        "timestamp"       => $timestamp
+        "timestamp" => $timestamp,
     ];
 } catch (Exception $e) {
     $twigVariables = [
         "caughtException" => true,
-        "caughtExceptionMessage" => $e
+        "caughtExceptionMessage" => $e,
     ];
 }
 
-$twig->display("main.html",  $twigVariables);
+$twig->display("main.html", $twigVariables);

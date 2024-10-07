@@ -10,11 +10,11 @@ if ($_SERVER["REQUEST_METHOD"] !== "GET") {
 }
 
 // db arrays
-$dataArray            = [];
+$dataArray = [];
 $dataArrayPlantowatch = [];
-$dataArrayWatching    = [];
-$dataArrayCompleted   = [];
-$dataArrayFavorites   = [];
+$dataArrayWatching = [];
+$dataArrayCompleted = [];
+$dataArrayFavorites = [];
 $timestamp = [];
 
 $db = new database();
@@ -25,7 +25,11 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
 
     // plan to watch
     if ($watchTypeSet === false) {
-        if (($row["progress"] === 0) && ($row["favorite"] !== "on") && ($row["is_deleted"] !== "yes")) {
+        if (
+            $row["progress"] === 0 &&
+            $row["favorite"] !== "on" &&
+            $row["is_deleted"] !== "yes"
+        ) {
             $watchTypeSet = true;
             $watchType = "plantowatch";
         }
@@ -33,7 +37,12 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
 
     // watching
     if ($watchTypeSet === false) {
-        if (($row["progress"] !== $row["progress_length"]) && ($row["favorite"] !== "on") && ($row["progress"] !== "0") && ($row["is_deleted"] !== "yes")) {
+        if (
+            $row["progress"] !== $row["progress_length"] &&
+            $row["favorite"] !== "on" &&
+            $row["progress"] !== "0" &&
+            $row["is_deleted"] !== "yes"
+        ) {
             $watchTypeSet = true;
             $watchType = "watching";
         }
@@ -41,7 +50,11 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
 
     // completed
     if ($watchTypeSet === false) {
-        if (($row["progress"] === $row["progress_length"]) && ($row["favorite"] !== "on") && ($row["is_deleted"] !== "yes")) {
+        if (
+            $row["progress"] === $row["progress_length"] &&
+            $row["favorite"] !== "on" &&
+            $row["is_deleted"] !== "yes"
+        ) {
             $watchTypeSet = true;
             $watchType = "completed";
         }
@@ -49,7 +62,7 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
 
     // favorites
     if ($watchTypeSet === false) {
-        if (($row["favorite"] !== "off") && ($row["is_deleted"] !== "yes")) {
+        if ($row["favorite"] !== "off" && $row["is_deleted"] !== "yes") {
             $watchTypeSet = true;
             $watchType = "favorites";
         }
@@ -69,20 +82,19 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
             array_push($dataArrayFavorites, $row);
             break;
     }
-    
+
     $dataArray = [
-        "Watching"      => $dataArrayWatching,
+        "Watching" => $dataArrayWatching,
         "Plan to watch" => $dataArrayPlantowatch,
-        "Completed"     => $dataArrayCompleted,
-        "Favorites"     => $dataArrayFavorites
+        "Completed" => $dataArrayCompleted,
+        "Favorites" => $dataArrayFavorites,
     ];
-    
 }
 
 // close
 $db->close();
 
 $twigVariables = [
-    "dataArray"            => $dataArray
+    "dataArray" => $dataArray,
 ];
 $twig->display("list.html", $twigVariables);
