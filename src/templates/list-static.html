@@ -1,0 +1,21 @@
+{% if dataArray is empty %}
+<div class="mt-3">
+    <h5 class="fw-semibold">There's nothing here. Try adding an entry!</h5>
+</div>
+{% endif %}
+
+{% for key, list in dataArray %}
+<h2>{{ key }}</h2>
+<table>
+    <tr>
+        <th>Title Season (Year)</th>
+        <th>Score</th>
+    </tr>
+    {% for entry in list %}
+    <tr>
+        <td>{{ entry.title }} {{ entry.season }} ({{ entry.year }})</td>
+        <td>{% if entry.score == 0 %} 🤔 {% else %} {{ entry.score }} {% endif %}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endfor %}

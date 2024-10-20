@@ -3,25 +3,26 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    
+
         <link rel="icon" type="image/png" href="/images/rei.png"/>
         <title>maltslist</title>
 
-        <link rel="stylesheet" href="/css/bootstrap-5.3.1.min.css">
+        <!-- bootstrap -->
+        <link rel="stylesheet" href="/css/bootstrap-5.3.3.min.css">
 
+        <!-- custom stylesheet -->
         <link rel="stylesheet" href="/css/style.css">
 
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
- 
-        <link rel="stylesheet" href="/css/swal2-dark-custom.css"/>
-       
-        <!-- fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> 
+        <!-- animate.min.css -->
+        <link rel="stylesheet" href="/css/animate-4.1.1.min.css"/>
 
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css" integrity="sha256-XoaMnoYC5TH6/+ihMEnospgm0J1PM/nioxbOUdnM8HY=" crossorigin="anonymous">
-        
+        <!-- sweetalert2 -->
+        <!-- FIXME: This custom stylesheet will probably make it difficult to bump releases in the future -->
+        <link rel="stylesheet" href="/css/swal2-dark-custom.css"/>
+
+        <!-- fork-awesome -->
+        <link rel="stylesheet" href="/css/fork-awesome-1.2.0.min.css">
+
         <!-- htmx -->
         <script src="js/htmx-1.9.4.min.js"></script>
         <script src="js/htmx-response-targets.js"></script>
@@ -92,8 +93,8 @@
         {{ include("modal-ae.html") }}
         {{ include("modal-ce.html") }}
 
-        
-        <script src="js/bootstrap-5.3.1.bundle.min.js"></script>        
+
+        <script src="js/bootstrap-5.3.3.bundle.min.js"></script>
         <script src="js/sweetalert2.min.js"></script>
         <script src="js/list-2.3.1.min.js"></script>
 

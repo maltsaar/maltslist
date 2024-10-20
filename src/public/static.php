@@ -97,4 +97,4 @@ $db->close();
 $twigVariables = [
     "dataArray" => $dataArray,
 ];
-$twig->display("list.html", $twigVariables);
+$twig->display("list-static.html", $twigVariables);
