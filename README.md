@@ -13,14 +13,14 @@ If you're planning on serving this over the internet you should be using some so
 | Editing entries | Yes |
 | Deleting entries | Will add later |
 | Sorting entries | Yes (Current state is a bit buggy) |
-| Static read only site running on a different port | Will add later | 
+| Static read only site running on a different port | Work in progress | 
 | Mobile device support | Yes |
 | TMDB API integration | Yes |
 | anilist.co API integration | Will add later |
 | Logging | Will add later |
 | Authentication | No |
 | API | Will add later |
-| Docker dev environment | Will add later |
+| Docker dev environment | Yes |
 | CI and Releases | Will add later |
 
 ## Usage
