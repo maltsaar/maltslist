@@ -6,6 +6,7 @@ require_once "../config.php";
 class database
 {
     public $db;
+
     function __construct()
     {
         $this->db = $this->connect();
@@ -90,6 +91,7 @@ class database
         return $result;
     }
 
+    /* FIXME: Remove redundant $oldValue parameter */
     public function updateSpecificColumn(
         $column,
         $newValue,
@@ -115,7 +117,7 @@ class database
         }
 
         $statement = $this->db->prepare("
-    		UPDATE 'list' SET $column=:newValue WHERE $column IS :oldValue AND `index` IS :index
+    		UPDATE 'list' SET $column=:newValue WHERE `index` IS :index
     	");
 
         $statement->bindValue(":index", $index, SQLITE3_INTEGER);
