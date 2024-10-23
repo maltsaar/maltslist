@@ -32,7 +32,7 @@
         <main>
             <!-- navbar -->
             <div class="container responsive-mtb">
-                <div onclick="parent.location=''" class="d-inline header-image-container">
+                <div onclick="parent.location='/'" class="d-inline header-image-container">
                     <img class="rounded" src="/images/rei.png" width="100">
                 </div>
             </div>
@@ -89,10 +89,11 @@
         </div>
         {% endif %}
 
+        {% if not caughtException %}
         {{ include("modal-legal.html") }}
         {{ include("modal-ae.html") }}
         {{ include("modal-ce.html") }}
-
+        {% endif %}
 
         <script src="js/bootstrap-5.3.3.bundle.min.js"></script>
         <script src="js/sweetalert2.min.js"></script>
