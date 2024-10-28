@@ -25,11 +25,7 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
 
     // plan to watch
     if ($watchTypeSet === false) {
-        if (
-            $row["progress"] === 0 &&
-            $row["favorite"] !== "on" &&
-            $row["is_deleted"] !== "yes"
-        ) {
+        if ($row["progress"] === 0 && $row["favorite"] !== "on") {
             $watchTypeSet = true;
             $watchType = "plantowatch";
         }
@@ -40,8 +36,7 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
         if (
             $row["progress"] !== $row["progress_length"] &&
             $row["favorite"] !== "on" &&
-            $row["progress"] !== "0" &&
-            $row["is_deleted"] !== "yes"
+            $row["progress"] !== "0"
         ) {
             $watchTypeSet = true;
             $watchType = "watching";
@@ -52,8 +47,7 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
     if ($watchTypeSet === false) {
         if (
             $row["progress"] === $row["progress_length"] &&
-            $row["favorite"] !== "on" &&
-            $row["is_deleted"] !== "yes"
+            $row["favorite"] !== "on"
         ) {
             $watchTypeSet = true;
             $watchType = "completed";
@@ -62,7 +56,7 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
 
     // favorites
     if ($watchTypeSet === false) {
-        if ($row["favorite"] !== "off" && $row["is_deleted"] !== "yes") {
+        if ($row["favorite"] !== "off") {
             $watchTypeSet = true;
             $watchType = "favorites";
         }
@@ -82,13 +76,24 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
             array_push($dataArrayFavorites, $row);
             break;
     }
+}
 
-    $dataArray = [
-        "Watching" => $dataArrayWatching,
-        "Plan to watch" => $dataArrayPlantowatch,
-        "Completed" => $dataArrayCompleted,
-        "Favorites" => $dataArrayFavorites,
-    ];
+$dataArray = [];
+
+if (!empty($dataArrayWatching)) {
+    $dataArray["Watching"] = $dataArrayWatching;
+}
+
+if (!empty($dataArrayPlantowatch)) {
+    $dataArray["Plan to watch"] = $dataArrayPlantowatch;
+}
+
+if (!empty($dataArrayCompleted)) {
+    $dataArray["Completed"] = $dataArrayCompleted;
+}
+
+if (!empty($dataArrayFavorites)) {
+    $dataArray["Favorites"] = $dataArrayFavorites;
 }
 
 // close
