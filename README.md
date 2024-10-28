@@ -1,10 +1,6 @@
 # maltslist
 A simple way to keep track of movies and tv shows
 
-## Disclaimer
-
-If you're planning on serving this over the internet you should be using some sort of authentication mechanism like authelia or keycloak.
-
 ## Feature table
 
 | Feature | Status |
@@ -13,7 +9,7 @@ If you're planning on serving this over the internet you should be using some so
 | Editing entries | Yes |
 | Deleting entries | Will add later |
 | Sorting entries | Yes (Current state is a bit buggy) |
-| Static read only site running on a different port | Work in progress | 
+| Static read only site running on a different port | Work in progress |
 | Mobile device support | Yes |
 | TMDB API integration | Yes |
 | anilist.co API integration | Will add later |
@@ -23,7 +19,16 @@ If you're planning on serving this over the internet you should be using some so
 | Docker dev environment | Yes |
 | CI and Releases | Will add later |
 
+## Known issues
+
+* If every list type isn't populated sorting might not work properly
+* Sorting will break after adding a new entry if you don't refresh the current page
+
 ## Usage
+
+### Disclaimer
+
+If you're planning on serving this over the internet you should be using some sort of authentication mechanism like authelia or keycloak.
 
 ### Obtain a TMDB API key
 
@@ -32,12 +37,12 @@ Read more [here](https://developer.themoviedb.org/docs/getting-started)
 ### Set your environment variables in .env
 
 ```
-DATABASE=maltslist-sample.sqlite3
+DATABASE=maltslist.sqlite3
 TMDB_API_KEY=tokengoeshere
 TMDB_INCLUDE_ADULT=true
 ```
 
-### Set permissions for the db folder and sqlite3 database
+### Set permissions for the db volume
 
 ```
 chown -R 65534:65534 db
@@ -54,10 +59,6 @@ docker compose build
 ```
 docker compose up -d
 ```
-
-## Known issues
-
-* If every list type isn't populated sorting might not work properly
 
 ## Screenshots
 

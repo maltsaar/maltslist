@@ -247,6 +247,10 @@ class database
             array_push($timestamp, $row);
         }
 
-        return $timestamp[0]["timestamp"];
+        if (!empty($timestamp[0])) {
+            return $timestamp[0]["timestamp"];
+        } else {
+            return false;
+        }
     }
 }
