@@ -2,27 +2,28 @@ FROM alpine:latest
 
 # Install packages
 RUN apk add --no-cache \
-  curl \
-  nginx \
-  php83 \
-  php83-ctype \
-  php83-curl \
-  php83-dom \
-  php83-fileinfo \
-  php83-fpm \
-  php83-gd \
-  php83-intl \
-  php83-mbstring \
-  php83-mysqli \
-  php83-opcache \
-  php83-openssl \
-  php83-phar \
-  php83-session \
-  php83-tokenizer \
-  php83-xml \
-  php83-xmlreader \
-  php83-xmlwriter \
-  supervisor
+    curl \
+    nginx \
+    php83 \
+    php83-ctype \
+    php83-curl \
+    php83-dom \
+    php83-fileinfo \
+    php83-fpm \
+    php83-gd \
+    php83-intl \
+    php83-mbstring \
+    php83-mysqli \
+    php83-opcache \
+    php83-openssl \
+    php83-phar \
+    php83-session \
+    php83-tokenizer \
+    php83-xml \
+    php83-xmlreader \
+    php83-xmlwriter \
+    sqlite \
+    supervisor
 
 # Configure PHP-FPM
 ENV PHP_INI_DIR /etc/php83
