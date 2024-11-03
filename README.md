@@ -7,7 +7,7 @@ A simple way to keep track of movies and tv shows
 | --- | --- |
 | Creating entries | Yes |
 | Editing entries | Yes |
-| Deleting entries | Will add later |
+| Deleting entries | Yes |
 | Sorting entries | Yes (Current state is a bit buggy) |
 | Static read only site running on a different port | Work in progress |
 | Mobile device support | Yes |
