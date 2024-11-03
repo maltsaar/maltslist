@@ -1,4 +1,4 @@
 .env
-db/maltslist.sqlite3
+db/
 src/vendor
 src/composer.lock

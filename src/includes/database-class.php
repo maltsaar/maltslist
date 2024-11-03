@@ -226,6 +226,42 @@ class database
         $this->updateTimestamp();
     }
 
+    public function deleteListEntry($id)
+    {
+        $statement = $this->db->prepare("
+            DELETE FROM list WHERE `index` = :id
+        ");
+        $statement->bindValue(":id", $id, SQLITE3_INTEGER);
+        $statement->execute();
+
+        $allRows = $this->getAllRows();
+        while ($row = $allRows->fetchArray(SQLITE3_ASSOC)) {
+            if ($row["index"] <= $id) {
+                continue;
+            }
+
+            $oldId = $row["index"];
+            $newId = $row["index"] - 1;
+
+            $statement = $this->db->prepare("
+                UPDATE list SET `index` = :newId WHERE `index` = :oldId
+            ");
+            $statement->bindValue(":newId", $newId, SQLITE3_INTEGER);
+            $statement->bindValue(":oldId", $oldId, SQLITE3_INTEGER);
+            $statement->execute();
+        }
+
+        $rowCount = $this->db
+            ->query("SELECT COUNT(*) FROM list")
+            ->fetchArray(SQLITE3_ASSOC)["COUNT(*)"];
+
+        $statement = $this->db->prepare("
+            UPDATE SQLITE_SEQUENCE SET SEQ = :rowCount WHERE NAME='list'
+        ");
+        $statement->bindValue(":rowCount", $rowCount, SQLITE3_INTEGER);
+        $statement->execute();
+    }
+
     // FIXME: These functions below are ugly
     public function updateTimestamp()
     {

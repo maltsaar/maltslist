@@ -1,0 +1,12 @@
+{% if htmx_error_title is defined and htmx_error_body is defined %}
+<script>
+    swalPopup("error", "{{ htmx_error_title }}", "{{ htmx_error_body | raw }}");
+</script>
+<div class="mt-3">
+    <h5 class="fw-semibold">Failed to delete entry! List will reload in a moment...</h5>
+</div>
+{% else %}
+<div class="mt-3">
+    <h5 class="fw-semibold">Entry deleted successfully! List will reload in a moment...</h5>
+</div>
+{% endif %}
