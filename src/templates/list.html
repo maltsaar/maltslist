@@ -27,6 +27,7 @@
         <div class="flex-container list-header p-1">
             <div class="flex-entry list-nr me-2">#</div>
             <div class="flex-entry list-title sort" data-sort="sort-title">title</div>
+            <div class="flex-entry list-delete me-1"></div>
             <div class="flex-entry list-modal"></div>
             <div class="flex-entry list-score me-5 sort" data-sort="sort-score">score</div>
             <div class="flex-entry list-progress me-5 sort" data-sort="sort-progress" data-default-order="asc">progress</div>
@@ -46,6 +47,10 @@
                 <!-- title -->
                 <li class="flex-entry list-title">
                     <span class="sort-title" id="title-{{ entry.index }}">{{ entry.title }} {{ entry.season }} ({{ entry.year }})</span>
+                </li>
+
+                <li onclick="swalPopupDelete(this.id);" id="delete-modal-{{ entry.index }}" class="me-1 flex-entry list-delete d-flex align-items-center justify-content-center">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
                 </li>
 
                 <li onclick="populateChangeEntryModal(this.id);" id="modal-{{ entry.index }}" class="flex-entry list-modal d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#modalExisting">

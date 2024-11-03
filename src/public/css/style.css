@@ -127,7 +127,11 @@ a {
     background-color: #aa6ce0;
 }
 
-.list-entry:hover .list-modal {
+.list-entry:hover > .list-modal {
+    visibility: visible;
+}
+
+.list-entry:hover > .list-delete {
     visibility: visible;
 }
 
@@ -146,22 +150,27 @@ a {
     text-align: left;
 }
 
-.list-entry > .list-modal {
+.list-entry > .list-modal,
+.list-delete {
     border-radius: 5px;
     background-color: rgba(0, 0, 0, 0.15);
     max-height: 20px;
 }
 
-.list-entry > .list-modal:hover {
+.list-entry > .list-modal:hover,
+.list-delete:hover {
     background-color: rgba(0, 0, 0, 0.25);
+}
+
+.list-delete {
+    width: 30px;
+    min-width: 30px;
+    visibility: hidden;
 }
 
 .list-modal {
     width: 40px;
     min-width: 40px;
-}
-
-.list-modal {
     visibility: hidden;
 }
 
@@ -229,6 +238,7 @@ main {
     all: unset;
     pointer-events: auto;
 }
+
 .banner-hero {
     /*
     border-top-left-radius: 5px;
@@ -347,14 +357,14 @@ main {
 
 /* Mobile device */
 @media (pointer: coarse) {
-    .fa {
+    .fa-ellipsis-h {
         transform: translateY(+10%);
     }
 }
 
 /* Desktop device */
 @media (pointer: fine) {
-    .fa {
+    .fa-ellipsis-h {
         transform: translateY(+6%);
     }
 }
