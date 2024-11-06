@@ -29,6 +29,19 @@ body {
     color: #adb5bd;
 }
 
+.custom-badge-bg {
+    background-color: #21364a;
+}
+
+#filter-form input,
+#filter-form select {
+    background-color: #0b1622;
+}
+
+#filter-form select:has(> option[value=""]:checked) {
+    color: #6f7478 !important;
+}
+
 input,
 select,
 textarea {

@@ -14,6 +14,7 @@ CREATE TABLE "list" (
 	"tmdb_cover"	TEXT,
 	"tmdb_banner"	TEXT,
 	"tmdb_description"	TEXT,
+	"tmdb_genres"	TEXT,
 	PRIMARY KEY("index" AUTOINCREMENT)
 ) STRICT;
 

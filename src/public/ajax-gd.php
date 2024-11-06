@@ -23,6 +23,32 @@ $result = $db->getAllRows();
 while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
     $watchTypeSet = false;
 
+    if (!empty($row["tmdb_genres"])) {
+        $row["tmdb_genres"] = explode(", ", $row["tmdb_genres"]);
+    }
+
+    // title search
+    if (!empty($_GET["search"])) {
+        if (
+            !str_contains(
+                strtolower($row["title"]),
+                strtolower($_GET["search"])
+            )
+        ) {
+            continue;
+        }
+    }
+
+    // genre filter
+    if (!empty($_GET["genre"])) {
+        if (empty($row["tmdb_genres"])) {
+            break;
+        }
+        if (!in_array($_GET["genre"], $row["tmdb_genres"])) {
+            continue;
+        }
+    }
+
     // plan to watch
     if ($watchTypeSet === false) {
         if ($row["progress"] === 0 && $row["favorite"] !== "on") {
