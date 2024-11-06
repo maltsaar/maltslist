@@ -23,6 +23,38 @@ $result = $db->getAllRows();
 while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
     $watchTypeSet = false;
 
+    if (!empty($row["tmdb_genres"])) {
+        $row["tmdb_genres"] = explode(", ", $row["tmdb_genres"]);
+    }
+
+    // title search
+    // If search query isn't present skip
+    if (!empty($_GET["search"])) {
+        // If title field isn't present in search query skip and reiterate
+        if (
+            !str_contains(
+                strtolower($row["title"]),
+                strtolower($_GET["search"])
+            )
+        ) {
+            continue;
+        }
+    }
+
+    // genre filter
+    // If genre filter query isn't present skip
+    if (!empty($_GET["genre"])) {
+        // if genre field in database is empty skip and reiterate
+        if (empty($row["tmdb_genres"])) {
+            continue;
+        }
+
+        // if queried genre is not present in database row skip and reiterate
+        if (!in_array($_GET["genre"], $row["tmdb_genres"])) {
+            continue;
+        }
+    }
+
     // plan to watch
     if ($watchTypeSet === false) {
         if ($row["progress"] === 0 && $row["favorite"] !== "on") {

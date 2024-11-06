@@ -2,3 +2,4 @@
 db/
 src/vendor
 src/composer.lock
+add_genres_to_db.php

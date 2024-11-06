@@ -88,17 +88,15 @@ try {
     }
 }
 
-if (!isset($tmdbData["results"][0])) {
+if (empty($tmdbData)) {
     error("Failed to add entry!", "TMDB API was unable to find anything");
 }
-
-// we only need the first result
-$tmdbData = $tmdbData["results"][0];
 
 $id = $tmdbData["id"];
 $description = $tmdbData["overview"];
 $cover = $tmdbData["poster_path"];
 $banner = $tmdbData["backdrop_path"];
+$genres = implode(", ", $tmdbData["genres"]);
 
 //
 // db
@@ -136,7 +134,8 @@ try {
         $id,
         $cover,
         $banner,
-        $description
+        $description,
+        $genres
     );
 } catch (Exception $e) {
     error("Caught database exception", $e->getMessage());

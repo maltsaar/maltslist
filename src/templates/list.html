@@ -6,7 +6,7 @@
 
 {% if dataArray is empty %}
     <div class="mt-3">
-        <h5 class="fw-semibold">There's nothing here. Try adding an entry!</h5>
+        <h5 class="fw-semibold">There's nothing here...</h5>
     </div>
 {% endif %}
 
@@ -44,9 +44,15 @@
                 <li class="flex-entry list-nr me-2">
                     <span>{{ entry.index }}</span>
                 </li>
+
                 <!-- title -->
                 <li class="flex-entry list-title">
                     <span class="sort-title" id="title-{{ entry.index }}">{{ entry.title }} {{ entry.season }} ({{ entry.year }})</span>
+                    <div class="d-block">
+                        {% for genre in entry.tmdb_genres %}
+                        <span class="badge custom-badge-bg">{{ genre }}</span>
+                        {% endfor %}
+                    </div>
                 </li>
 
                 <li onclick="swalPopupDelete(this.id);" id="delete-modal-{{ entry.index }}" class="me-1 flex-entry list-delete d-flex align-items-center justify-content-center">
