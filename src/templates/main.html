@@ -61,6 +61,33 @@
             </div>
 
             {% if not caughtException %}
+            <div class="container mt-3">
+                <h5 class="fw-semibold d-block">Search</h5>
+                <form id="filter-form">
+                    <div class="d-flex h-50">
+                            <div class="flex-grow-1 me-2">
+                                <input class="form-control form-control-md me-2" type="text" placeholder="Pulp Fiction (1994)"
+                                name="search"
+                                hx-get="/ajax-gd.php"
+                                hx-trigger="input changed delay:500ms, search"
+                                hx-target="#lists-container"
+                                hx-include="#filter-form">
+                            </div>
+                            <div>
+                                <select class="form-select form-select-md" name="genre"
+                                hx-get="/ajax-gd.php"
+                                hx-trigger="change, genre"
+                                hx-target="#lists-container"
+                                hx-include="#filter-form">
+                                    <option selected value="">Genre</option>
+                                    {% for genre in genres %}
+                                    <option>{{ genre }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                    </div>
+                </form>
+            </div>
             <div id="lists-container" hx-get="/ajax-gd.php" hx-trigger="load" hx-target="#lists-container" hx-target-*="#lists-container" class="container">
                 <div class="mt-3">
                     <h5 class="fw-semibold">Loading...</h5>
