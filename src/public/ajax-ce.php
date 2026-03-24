@@ -78,7 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (!isset($changedElement)) {
         error(
             "Failed to change entry",
-            "Failed to identify that any element has changed"
+            "Failed to identify that any element has changed",
         );
     }
 
@@ -90,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $newValue,
                 $oldValue,
                 $index,
-                $sqliteType
+                $sqliteType,
             );
         } catch (Exception $e) {
             error("Caught database exception", $e->getMessage());
@@ -125,7 +125,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             if ($newValue > $progress_length) {
                 error(
                     "Failed to change progress",
-                    "Can't increment over length"
+                    "Can't increment over length",
                 );
             }
             update($db, "progress", $newValue, $oldValue, $index, "integer");
@@ -139,7 +139,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             if ($newValue < $progress) {
                 error(
                     "Failed to change length",
-                    "Can't decrement under progress"
+                    "Can't decrement under progress",
                 );
             }
             update(
@@ -148,7 +148,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $newValue,
                 $oldValue,
                 $index,
-                "integer"
+                "integer",
             );
         }
 
@@ -160,7 +160,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $newValue,
                 $oldValue,
                 $index,
-                "integer"
+                "integer",
             );
         }
     }
@@ -211,7 +211,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $progress,
                 $actualEntry["progress"],
                 $index,
-                $progress_length
+                $progress_length,
             );
             break;
         case "progress_length":
@@ -220,7 +220,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $progress_length,
                 $actualEntry["progress_length"],
                 $index,
-                $progress
+                $progress,
             );
             break;
         case "type":

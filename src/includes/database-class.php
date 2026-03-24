@@ -97,7 +97,7 @@ class database
         $newValue,
         $oldValue,
         $index,
-        $sqliteType
+        $sqliteType,
     ) {
         // https://stackoverflow.com/a/182353
         // !!! DON'T DURGASIR THE SQL STATEMENT !!!
@@ -153,7 +153,7 @@ class database
         $cover,
         $banner,
         $description,
-        $genres
+        $genres,
     ) {
         // prepared statement
         $statement = $this->db->prepare("
@@ -208,7 +208,7 @@ class database
         $statement->bindValue(
             ":progress_length",
             $progress_length,
-            SQLITE3_INTEGER
+            SQLITE3_INTEGER,
         );
         $statement->bindValue(":type", $type, SQLITE3_TEXT);
         $statement->bindValue(":rewatch", $rewatch, SQLITE3_INTEGER);
@@ -274,7 +274,7 @@ class database
         $timestamp = date("d.m.Y H:i:s");
 
         $this->db->exec(
-            "INSERT INTO 'last-updated' (timestamp) VALUES ('$timestamp')"
+            "INSERT INTO 'last-updated' (timestamp) VALUES ('$timestamp')",
         );
     }
 

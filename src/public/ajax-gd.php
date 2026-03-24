@@ -34,7 +34,7 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
         if (
             !str_contains(
                 strtolower($row["title"]),
-                strtolower($_GET["search"])
+                strtolower($_GET["search"]),
             )
         ) {
             continue;
