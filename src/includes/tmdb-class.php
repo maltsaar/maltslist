@@ -55,35 +55,7 @@ class tmdb
 
     public function getTmdbData()
     {
-        if ($this->type === "tv") {
-            $title = $this->fixTvTitle($this->title, $this->type);
-        }
-
         return $this->performApiRequest($this->title, $this->year, $this->type);
-    }
-
-    // Because the season is currently included in the title we need to remove it
-    // Example: "Person of Interest S01" -> "Person of Interest"
-    private function fixTvTitle($title, $type)
-    {
-        // Create array with values "S0-S99"
-        $seasons = range(0, 99);
-        $seasons = preg_filter("/^/", " S", $seasons);
-
-        // Instead of S0-S9 have S00-S09
-        foreach ($seasons as $key => $value) {
-            if ($key < 10) {
-                $fixedValue = str_replace("S" . $key, "S0" . $key, $value);
-                $seasons[$key] = $fixedValue;
-            }
-        }
-
-        if ($type === "film") {
-            return $title;
-        } else {
-            $title = str_replace($seasons, "", $title);
-            return $title;
-        }
     }
 
     private function performApiRequest($title, $year, $type)
@@ -111,20 +83,28 @@ class tmdb
                 "GET",
                 "https://api.themoviedb.org/3/search/movie?" .
                     $builtQueryParams,
-                $headers
+                $headers,
             );
         } else {
             $response = $client->request(
                 "GET",
                 "https://api.themoviedb.org/3/search/tv?" . $builtQueryParams,
-                $headers
+                $headers,
             );
         }
 
         if (!empty($response)) {
             $response = json_decode($response->getBody(), true);
-            if (isset($response["results"][0])) {
-                // we only need the first result
+
+            // TMDB api returns multiple results in an array but we only want one
+            // Sort by popularity to avoid the chances of getting a bad match
+            if (
+                !empty($response["results"]) &&
+                is_array($response["results"])
+            ) {
+                usort($response["results"], function ($a, $b) {
+                    return ($b["popularity"] ?? 0) <=> ($a["popularity"] ?? 0);
+                });
                 $response = $response["results"][0];
             } else {
                 return false;
@@ -137,6 +117,9 @@ class tmdb
                     $genres[] = self::GENRES[$genreId];
                 }
                 $response["genres"] = $genres;
+            } else {
+                // If no genre_ids are present in the API response set it to an empty array
+                $response["genres"] = [];
             }
 
             return $response;

@@ -31,7 +31,7 @@ $comment = (string) trim($_POST["form-comment"]);
 if (!isset($title, $score, $progress, $progress_length, $rewatch, $favorite)) {
     error(
         "Missing required POST parameter!",
-        "One of these parameters was not set: form-title, form-score, form-progress, form-progress-length, form-rewatch, form-favorite"
+        "One of these parameters was not set: form-title, form-score, form-progress, form-progress-length, form-rewatch, form-favorite",
     );
 }
 
@@ -46,7 +46,7 @@ if (empty($year)) {
 if ($progress_length < $progress) {
     error(
         "Failed to add entry!",
-        "Progress ($progress) is bigger than Total length ($progress_length)"
+        "Progress ($progress) is bigger than Total length ($progress_length)",
     );
 }
 
@@ -113,7 +113,7 @@ if (!empty($duplicateCheck)) {
         if ($season === $duplicateCheck["season"]) {
             error(
                 "Failed to add entry!",
-                "Entry with this title and season already exists."
+                "Entry with this title and season already exists.",
             );
         }
     }
@@ -135,7 +135,7 @@ try {
         $cover,
         $banner,
         $description,
-        $genres
+        $genres,
     );
 } catch (Exception $e) {
     error("Caught database exception", $e->getMessage());
