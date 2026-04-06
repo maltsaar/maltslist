@@ -32,6 +32,23 @@
 
     <div class="d-flex mt-2">
         <div class="me-2">
+            <i class="fa fa-language" aria-hidden="true"></i>
+        </div>
+        <div style="max-width: content;">
+            {% if entry.tmdb_original_language == "xx" %}
+            No Language
+            {% elseif entry.tmdb_original_language == "cn" %}
+            Cantonese
+            {% elseif entry.tmdb_original_language == "mo" %}
+            Moldavian
+            {% else %}
+            {{ entry.tmdb_original_language | language_name }}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="d-flex mt-2">
+        <div class="me-2">
             <i class="fa fa-quote-left" aria-hidden="true"></i>
         </div>
         <div style="max-width: content;">

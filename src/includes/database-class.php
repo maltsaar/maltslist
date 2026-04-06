@@ -154,6 +154,7 @@ class database
         $banner,
         $description,
         $genres,
+        $original_language,
     ) {
         // prepared statement
         $statement = $this->db->prepare("
@@ -172,7 +173,8 @@ class database
 		        tmdb_cover,
 		        tmdb_banner,
 		        tmdb_description,
-				tmdb_genres
+				tmdb_genres,
+				tmdb_original_language
 		    )
 		    VALUES (
 		        :title,
@@ -189,7 +191,8 @@ class database
 		        :cover,
 		        :banner,
 		        :description,
-				:genres
+				:genres,
+				:original_language
             )
 		");
 
@@ -225,6 +228,11 @@ class database
         $statement->bindValue(":banner", $banner, SQLITE3_TEXT);
         $statement->bindValue(":description", $description, SQLITE3_TEXT);
         $statement->bindValue(":genres", $genres, SQLITE3_TEXT);
+        $statement->bindValue(
+            ":original_language",
+            $original_language,
+            SQLITE3_TEXT,
+        );
 
         $statement->execute();
         $this->updateTimestamp();

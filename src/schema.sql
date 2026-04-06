@@ -15,6 +15,7 @@ CREATE TABLE "list" (
 	"tmdb_banner"	TEXT,
 	"tmdb_description"	TEXT,
 	"tmdb_genres"	TEXT,
+	"tmdb_original_language"	TEXT,
 	PRIMARY KEY("index" AUTOINCREMENT)
 ) STRICT;
 
