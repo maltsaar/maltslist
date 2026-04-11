@@ -2,7 +2,7 @@
 
 require_once "../includes/tmdb-class.php";
 
-echo "This script will update all TMDB metadata (tmdb_cover, tmdb_banner, tmdb_description, tmdb_genres) in the database.\n";
+echo "This script will update all TMDB metadata (tmdb_cover, tmdb_banner, tmdb_description, tmdb_genres, tmdb_original_language) in the database.\n";
 
 $db = new SQLite3("../db/maltslist.sqlite3", SQLITE3_OPEN_READWRITE);
 $db->enableExceptions(true);
@@ -123,6 +123,26 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
             UPDATE list SET tmdb_genres = :genre WHERE tmdb_id = :tmdbId
         ");
         $statement->bindValue(":genre", $genre, SQLITE3_TEXT);
+        $statement->bindValue(":tmdbId", $tmdbId, SQLITE3_INTEGER);
+        $statement->execute();
+
+        echo " OK";
+    } catch (Exception $e) {
+        echo " FAIL";
+        echo "\n$e";
+    }
+
+    echo "\nUpdating tmdb_original_language...";
+    try {
+        $original_language = $response["original_language"];
+        $statement = $db->prepare("
+            UPDATE list SET tmdb_original_language = :original_language WHERE tmdb_id = :tmdbId
+        ");
+        $statement->bindValue(
+            ":original_language",
+            $original_language,
+            SQLITE3_TEXT,
+        );
         $statement->bindValue(":tmdbId", $tmdbId, SQLITE3_INTEGER);
         $statement->execute();
 

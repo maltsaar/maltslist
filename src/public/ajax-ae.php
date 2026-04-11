@@ -97,6 +97,7 @@ $description = $tmdbData["overview"];
 $cover = $tmdbData["poster_path"];
 $banner = $tmdbData["backdrop_path"];
 $genres = implode(", ", $tmdbData["genres"]);
+$original_language = $tmdbData["original_language"];
 
 //
 // db
@@ -136,6 +137,7 @@ try {
         $banner,
         $description,
         $genres,
+        $original_language,
     );
 } catch (Exception $e) {
     error("Caught database exception", $e->getMessage());

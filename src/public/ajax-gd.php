@@ -41,6 +41,20 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
         }
     }
 
+    // language filter
+    // If language filter query isn't present skip
+    if (!empty($_GET["language"])) {
+        // if language field in database is empty skip and reiterate
+        if (empty($row["tmdb_original_language"])) {
+            continue;
+        }
+
+        // if queried language is not present in database row skip and reiterate
+        if ($_GET["language"] !== $row["tmdb_original_language"]) {
+            continue;
+        }
+    }
+
     // genre filter
     // If genre filter query isn't present skip
     if (!empty($_GET["genre"])) {

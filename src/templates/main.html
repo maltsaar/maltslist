@@ -73,6 +73,28 @@
                                 hx-target="#lists-container"
                                 hx-include="#filter-form">
                             </div>
+                            <div class="me-2">
+                                <select class="form-select form-select-md" name="language"
+                                hx-get="/ajax-gd.php"
+                                hx-trigger="change, language"
+                                hx-target="#lists-container"
+                                hx-include="#filter-form">
+                                    <option selected value="">Language</option>
+                                    {% for language in languages %}
+                                    <option value="{{ language }}">
+                                        {% if language == "xx" %}
+                                        No Language
+                                        {% elseif language == "cn" %}
+                                        Cantonese
+                                        {% elseif language == "mo" %}
+                                        Moldavian
+                                        {% else %}
+                                        {{ language | language_name }}
+                                        {% endif %}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
                             <div>
                                 <select class="form-select form-select-md" name="genre"
                                 hx-get="/ajax-gd.php"

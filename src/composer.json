@@ -1,6 +1,7 @@
 {
     "require": {
         "guzzlehttp/guzzle": "^7.7",
-        "twig/twig": "^3.0"
+        "twig/twig": "^3.0",
+        "twig/intl-extra": "^3.24"
     }
 }

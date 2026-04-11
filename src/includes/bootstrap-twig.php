@@ -14,3 +14,6 @@ $twig = new \Twig\Environment($loader, [
     "use_yield" => true,
 ]);
 $twig->addExtension(new \Twig\Extension\DebugExtension());
+
+use Twig\Extra\Intl\IntlExtension;
+$twig->addExtension(new IntlExtension());

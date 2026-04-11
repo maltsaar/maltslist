@@ -72,6 +72,7 @@ var options = {
         "sort-type",
         "sort-rewatch",
         "sort-comment",
+        "sort-language",
     ],
 };
 waitForElement("#list-container-watching").then((element) => {
