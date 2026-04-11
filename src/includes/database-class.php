@@ -274,6 +274,25 @@ class database
         $statement->execute();
     }
 
+    public function getUsedLanguages()
+    {
+        $statement = $this->db->prepare("
+            SELECT DISTINCT tmdb_original_language FROM 'list'
+            ORDER BY tmdb_original_language ASC
+        ");
+
+        $result = $statement->execute();
+
+        $languages = [];
+        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+            $value = $row["tmdb_original_language"];
+
+            $languages[] = $value;
+        }
+
+        return $languages;
+    }
+
     // FIXME: These functions below are ugly
     public function updateTimestamp()
     {

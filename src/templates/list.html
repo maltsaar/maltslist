@@ -34,7 +34,8 @@
             <div class="flex-entry list-type me-4 sort" data-sort="sort-type"><i class="fa fa-play" aria-hidden="true"></i></div>
             <div class="flex-entry list-rewatch me-4 sort" data-sort="sort-rewatch"><i class="fa fa-refresh" aria-hidden="true"></i></div>
             <div class="flex-entry list-favorite me-4"><i class="fa fa-heart" aria-hidden="true"></i></div>
-            <div class="flex-entry list-comment sort" data-sort="sort-comment"><i class="fa fa-comment" aria-hidden="true"></i></div>
+            <div class="flex-entry list-comment sort me-4" data-sort="sort-comment"><i class="fa fa-comment" aria-hidden="true"></i></div>
+            <div class="flex-entry list-language sort" data-sort="sort-language"><i class="fa fa-language" aria-hidden="true"></i></div>
         </div>
 
         <ul class="list">
@@ -101,8 +102,13 @@
                 </li>
 
                 <!-- comment -->
-                <li class="flex-entry list-comment">
+                <li class="flex-entry list-comment me-4">
                     <span class="sort-comment" id="comment-{{ entry.index }}" real-value="{{ entry.comment }}">{{ comment_icon | raw }}</span>
+                </li>
+
+                <!-- language -->
+                <li class="flex-entry list-language">
+                    <span class="sort-language" id="language-{{ entry.index }}" real-value="{{ entry.tmdb_original_language }}">{{ entry.tmdb_original_language }}</span>
                 </li>
             </div>
             {% endfor %}

@@ -8,11 +8,13 @@ require_once "../includes/bootstrap-twig.php";
 try {
     $db = new database();
     $timestamp = $db->getTimestamp();
+    $languages = $db->getUsedLanguages();
     $db->close();
 
     $twigVariables = [
         "caughtException" => false,
         "timestamp" => $timestamp,
+        "languages" => $languages,
     ];
 } catch (Exception $e) {
     $twigVariables = [
@@ -23,7 +25,5 @@ try {
 
 // Call static method to get genres array because using a constructor is not possible
 $twigVariables["genres"] = tmdb::getTmdbGenres();
-// Call static method to get languages array because using a constructor is not possible
-$twigVariables["languages"] = tmdb::getTmdbLanguages();
 
 $twig->display("main.html", $twigVariables);
